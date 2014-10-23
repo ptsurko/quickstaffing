@@ -7,6 +7,13 @@ var https = require('https'),
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
 var POSITION_ENTITY_TYPE = 'com.epam.e3s.app.position.api.data.PositionProjectionEntity';
+var CANDIDATES_CACHE_FILE_NAME = 'cache/candidates.json';
+var POSITIONS_CACHE_FILE_NAME = 'cache/positions.json';
+
+// Memory storage for candidates.
+var candidates = [];
+// Memory storage for positions.
+var positions = [];
 
 //https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.people.api.data.EmployeeEntity&query={"statements":[{"query":"Available Now","fields":["availabilitySum"]}],"start":0,"limit":10}
 //https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.position.api.data.PositionProjectionEntity&query={"statements":[{"query":"Position","fields":["reqtype"]}],"filters":[],"start":0,"limit":10}
@@ -18,7 +25,7 @@ function getItems(auth, type, statements, start, limit, callback) {
     query: JSON.stringify({
       statements: statements || [{'query': '*'}],
       start: start || 0,
-      limit: limit || 5 //5000
+      limit: limit || 10 //5000
     })
   };
 
@@ -38,21 +45,47 @@ function getItems(auth, type, statements, start, limit, callback) {
   });
 };
 
+exports.syncCandidates = function(auth) {
+  getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,
+      function(data) {
+        console.log('Synced candidates');
+        cacheCandidates(mapPersons(data));
+      });
+};
+
+exports.syncPositions = function(auth) {
+  getItems(auth, POSITION_ENTITY_TYPE, [
+    {"query":"Position","fields":["reqtype"]},
+    {"query":"Open","fields":["stateSum"]}], null, null,
+      function(data) {
+        console.log('Synced positions');
+        cachePositions(mapPositions(data));
+      });
+};
+
 exports.getCandidates = function(callback) {
-  getItems(auth, EMPLOYEE_ENTITY_TYPE, [{"query":"Available Now","fields":["availabilitySum"]}], null, null, function(err, data) {
-    callback(null, mapPersons(data));
-  });
+  if (candidates.length == 0) {
+    console.log('read candidates from cache');
+    readCandidatesFromCache(callback);
+  } else {
+    console.log('read candidates from memory');
+    callback(candidates);
+  }
 };
 
 exports.getPositions = function(callback) {
-  getItems(auth, POSITION_ENTITY_TYPE, [{"query":"Position","fields":["reqtype"]},{"query":"Open","fields":["stateSum"]}], null, null, function(err, data) {
-    callback(null, mapPositions(data));
-  });
+  if (positions.length == 0) {
+    console.log('Read positions from cache');
+    readPositionsFromCache(callback);
+  } else {
+    console.log('Read positions from memory');
+    callback(positions);
+  }
 };
 
-exports.getProjects = function(callback) {
-  getItems(auth, PROJECT_ENTITY_TYPE, [{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}], null, null, function(err, data) {
-    callback(null, mapProjects(data));
+exports.getProjects = function(auth, callback) {
+  getItems(auth, PROJECT_ENTITY_TYPE, [{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}], null, null, function(data) {
+    callback(mapProjects(data));
   })
 };
 
@@ -106,7 +139,30 @@ function mapProjects(data) {
       customerId: project.customerIdSum
     };
   });
-};
+}
+
+function cacheCandidates(candidates) {
+  fs.writeFile(CANDIDATES_CACHE_FILE_NAME, JSON.stringify(candidates, null, 0), function(err, fd) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Cached candidates');
+    }
+  });
+}
+
+function readCandidatesFromCache(callback) {
+  fs.exists(CANDIDATES_CACHE_FILE_NAME, function() {
+    fs.readFile(CANDIDATES_CACHE_FILE_NAME, function(err, data) {
+      if(err) {
+        console.log('Error while read candidates cache');
+      } else {
+        candidates = JSON.parse(data);
+        callback(candidates);
+      }
+    });
+  });
+}
 
 function getCandidateTakenPositions(person) {
   if (person.workloadSum && person.workloadSum.length) {
@@ -142,6 +198,29 @@ function getCandidateProjects(person) {
 
   return _.unique(_.union(workloadProjects, workhistoryProjects));
 };
+
+function cachePositions(positions) {
+  fs.writeFile(POSITIONS_CACHE_FILE_NAME, JSON.stringify(positions, null, 0), function(err, fd) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Cached positions');
+    }
+  });
+}
+
+function readPositionsFromCache(callback) {
+  fs.exists(POSITIONS_CACHE_FILE_NAME, function() {
+    fs.readFile(POSITIONS_CACHE_FILE_NAME, function(err, data) {
+      if(err) {
+        console.log('Error while read positions cache');
+      } else {
+        positions = JSON.parse(data);
+        callback(positions);
+      }
+    });
+  });
+}
 
 function getFirstItemIfArray(array) {
   if (array.length) {

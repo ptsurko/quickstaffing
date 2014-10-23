@@ -38,7 +38,8 @@ app.use('/api/candidates', function(req, res) {
 
 app.use('/', express.static(__dirname + '/public'));
 
-var port = Number(process.env.PORT || 5000);
+var port = Number(process.env.PORT || 5001);
+
 app.listen(port, function() {
   console.log('Your files will be served through this web server')
 });
@@ -54,6 +55,16 @@ fs.exists('.credentials', function(exists) {
         auth.credentials.password = String(lines[1]);
 
         console.log('User credentials successfully loaded.');
+//        e3sservice.syncCandidates(credentials);
+//        e3sservice.syncPositions(credentials);
+
+        e3sservice.getCandidates(function(candidates) {
+          console.log(candidates);
+        });
+
+        e3sservice.getPositions(function(posotions) {
+          console.log(posotions);
+        });
       }
     });
   }
