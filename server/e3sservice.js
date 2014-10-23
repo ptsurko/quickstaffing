@@ -17,6 +17,8 @@ var positions = [];
 //https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.people.api.data.EmployeeEntity&query={"statements":[{"query":"Available Now","fields":["availabilitySum"]}],"start":0,"limit":10}
 //https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.position.api.data.PositionProjectionEntity&query={"statements":[{"query":"Position","fields":["reqtype"]}],"filters":[],"start":0,"limit":10}
 //https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.project.api.data.ProjectProjectionEntity&query={"statements":[{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}],"start":0,"limit":10}
+//https://e3s.epam.com/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?type=com.epam.e3s.app.company.api.data.BusinessOrgProjectionEntity&query={"statements":[{"query":"*"}],"start":0,"limit":10}
+
 
 function getItems(auth, type, statements, start, limit, callback) {
   var queryParameters = {

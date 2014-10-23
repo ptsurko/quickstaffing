@@ -1,8 +1,16 @@
 var e3sservice = require('./e3sservice'),
     _ = require('underscore');
 
-exports.getPositions = function(callback) {
-  e3sservice.getPositions(callback);
+exports.getPositions = function(query, callback) {
+  e3sservice.getPositions(function(positions) {
+    var result = positions;
+    if (query.project) {
+      result = _.filter(positions, function (position) {
+        return position.projectName && position.projectName.indexOf(query.project) == 0;
+      });
+    }
+    callback(result);
+  });
 };
 
 exports.getPositionById = function(positionId, callback) {

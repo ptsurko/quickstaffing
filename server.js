@@ -17,7 +17,9 @@ app.use('/api/positions/:id', function(req, res) {
 });
 app.use('/api/positions', function(req, res) {
   console.log('retrieving positions');
-  positionservice.getPositions(function(data) {
+
+  var project = req.query.project;
+  positionservice.getPositions({project: project}, function(data) {
     res.json(data);
   });
 });
@@ -31,9 +33,17 @@ app.use('/api/candidates/:name', function(req, res) {
 });
 app.use('/api/candidates', function(req, res) {
   console.log('retrieving candidates');
-  candidateservice.getCandidates(function(data) {
+
+  var candidateName = req.query.name;
+  candidateservice.getCandidates({name: candidateName}, function(data) {
     res.json(data);
   });
+});
+
+app.use('/reset', function(req, res) {
+  //TODO: implement cache reset.
+  //       - remove cache files
+  //       - clear in-memory cache
 });
 
 app.use('/', express.static(__dirname + '/public'));
