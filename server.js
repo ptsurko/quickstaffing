@@ -1,5 +1,6 @@
 var express = require('express'),
-    fs = require('fs'),
+    fs = require('fs')
+    _ = require('underscore'),
     e3sservice = require('./server/e3sservice'),
     auth = require('./auth'),
     candidateservice = require('./server/candidateservice'),
@@ -9,12 +10,17 @@ var express = require('express'),
     async = require('async'),
     bodyParser = require('body-parser');
 
-var credentials = {username: '', password: ''};
+var rankingCriteria = {
+  primarySkill: 0,
+  position: 0,
+  city: 0,
+  country: 0
+};
 var app = express();
 app.use(bodyParser.json());
 app.use('/api/positions/:id/candidates', function(req, res) {
   var positionId = req.params.id;
-  var query = req.query;
+  var query = _.extend({}, rankingCriteria, req.query);
   console.log('retrieving best candidates for position \'' + positionId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
   positionservice.getCandidatesForPosition(positionId, query, function(rankedCandidates) {
@@ -54,7 +60,7 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
 });
 app.use('/api/candidates/:id/positions', function(req, res) {
   var candidateId = req.params.id;
-  var query = req.query;
+  var query = _.extend({}, rankingCriteria, req.query);
   console.log('retrieving candidate \'' + candidateId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
   candidateservice.getPositionsForCandidate(candidateId, query, function(rankedPositions) {

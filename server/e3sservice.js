@@ -43,6 +43,8 @@ function getItems(auth, type, statements, start, limit, callback) {
     res.on('end', function() {
       callback(JSON.parse(data));
     });
+  }).on('error', function(e) {
+    console.log("Got error trying to load \'" + type + "\': " + e.message);
   });
 }
 
