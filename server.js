@@ -24,9 +24,18 @@ fs.exists('.credentials', function(exists) {
         credentials.username = String(lines[0]);
         credentials.password = String(lines[1]);
 
-       e3sservice.getCandidates(credentials, null, function() {});
-       e3sservice.getPositions(credentials, function() {});
-       e3sservice.getProjects(credentials, function() {});
+        e3sservice.getCandidates(credentials, null, function(candidates) {
+          console.log('candidates loaded');
+          //console.log(candidates);
+        });
+        e3sservice.getPositions(credentials, function(positions) {
+          console.log('positions loaded');
+          //console.log(positions);
+        });
+        e3sservice.getProjects(credentials, function(projects) {
+          console.log('projects loaded');
+          console.log(projects);
+        });
       }
     });
   }
