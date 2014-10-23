@@ -1,0 +1,21 @@
+{
+  "name": "quickstaffing",
+  "version": "0.0.0",
+  "authors": [
+    "ptsurko <pavel.tsurko@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.0",
+    "d3": "~3.4.13",
+    "bootstrap": "~3.2.0",
+    "sprintf": "~1.0.1"
+  }
+}

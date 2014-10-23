@@ -1,0 +1,14 @@
+node_modules/
+bower_components/
+
+*.DS_Store
+*.log
+
+build/
+dist/
+
+.credentials
+
+.idea
+cache/
+data/
