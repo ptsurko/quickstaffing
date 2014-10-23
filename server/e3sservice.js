@@ -40,12 +40,12 @@ function getItems(auth, type, statements, start, limit, callback) {
       data += chunk;
     });
     res.on('end', function() {
-      callback(null, JSON.parse(data));
+      callback(JSON.parse(data));
     });
   });
 };
 
-exports.syncCandidates = function(auth) {
+exports.syncCandidates = function() {
   getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,
       function(data) {
         console.log('Synced candidates');
@@ -53,7 +53,7 @@ exports.syncCandidates = function(auth) {
       });
 };
 
-exports.syncPositions = function(auth) {
+exports.syncPositions = function() {
   getItems(auth, POSITION_ENTITY_TYPE, [
     {"query":"Position","fields":["reqtype"]},
     {"query":"Open","fields":["stateSum"]}], null, null,
@@ -83,7 +83,7 @@ exports.getPositions = function(callback) {
   }
 };
 
-exports.getProjects = function(auth, callback) {
+exports.getProjects = function(callback) {
   getItems(auth, PROJECT_ENTITY_TYPE, [{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}], null, null, function(data) {
     callback(mapProjects(data));
   })

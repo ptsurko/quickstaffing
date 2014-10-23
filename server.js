@@ -11,13 +11,13 @@ var app = express();
 app.use('/api/positions/:id', function(req, res) {
   var positionId = req.params.id;
   console.log('retrieving position \'' + candidateName + '\'.');
-  positionservice.getPositionById(positionId, function(err, data) {
+  positionservice.getPositionById(positionId, function(data) {
     res.json(data);
   });
 });
 app.use('/api/positions', function(req, res) {
   console.log('retrieving positions');
-  positionservice.getPositions(function(err, data) {
+  positionservice.getPositions(function(data) {
     res.json(data);
   });
 });
@@ -25,20 +25,20 @@ app.use('/api/positions', function(req, res) {
 app.use('/api/candidates/:name', function(req, res) {
   var candidateName = req.params.name;
   console.log('retrieving candidate \'' + candidateName + '\'.');
-  candidateservice.getCandidateByName(candidateName, function(err, data) {
+  candidateservice.getCandidateByName(candidateName, function(data) {
     res.json(data);
   });
 });
 app.use('/api/candidates', function(req, res) {
   console.log('retrieving candidates');
-  candidateservice.getCandidates(function(err, data) {
+  candidateservice.getCandidates(function(data) {
     res.json(data);
   });
 });
 
 app.use('/', express.static(__dirname + '/public'));
 
-var port = Number(process.env.PORT || 5001);
+var port = Number(process.env.PORT || 5000);
 
 app.listen(port, function() {
   console.log('Your files will be served through this web server')
@@ -55,8 +55,8 @@ fs.exists('.credentials', function(exists) {
         auth.credentials.password = String(lines[1]);
 
         console.log('User credentials successfully loaded.');
-//        e3sservice.syncCandidates(credentials);
-//        e3sservice.syncPositions(credentials);
+        e3sservice.syncCandidates();
+        e3sservice.syncPositions();
 
         e3sservice.getCandidates(function(candidates) {
           console.log(candidates);
