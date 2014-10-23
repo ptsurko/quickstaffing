@@ -6,20 +6,31 @@ var express = require('express'),
     positionservice = require('./server/positionservice'),
     cacheservice = require('./server/cacheservice'),
     https = require('https'),
-    async = require('async');
+    async = require('async'),
+    bodyParser = require('body-parser');
 
 var credentials = {username: '', password: ''};
 var app = express();
+app.use(bodyParser.json());
+app.use('/api/positions/:id/candidates', function(req, res) {
+  var positionId = req.params.id;
+  var query = req.query;
+  console.log('retrieving best candidates for position \'' + positionId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
+  positionservice.getCandidatesForPosition(positionId, query, function(rankedCandidates) {
+    console.log('found candidates');
+    res.end();
+  });
+});
 app.use('/api/positions/:id', function(req, res) {
   var positionId = req.params.id;
-  console.log('retrieving position \'' + candidateName + '\'.');
+  console.log('retrieving position \'' + positionId + '\'.');
   positionservice.getPositionById(positionId, function(data) {
     res.json(data);
   });
 });
 app.use('/api/positions', function(req, res) {
-  console.log('retrieving positions');
+  console.log('retrieving positions.');
 
   var project = req.query.project;
   positionservice.getPositions({project: project}, function(data) {
@@ -29,7 +40,7 @@ app.use('/api/positions', function(req, res) {
 
 app.use('/api/candidates/photo/:photoId', function(req, res) {
   var photoId = req.params.photoId;
-  console.log('retrieving photo ' + photoId + '.');
+  console.log('retrieving photo \'' + photoId + '\'.');
 
   https.get({
     hostname: 'e3s.epam.com',
@@ -41,16 +52,26 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
     photoRes.pipe(res);
   });
 });
+app.use('/api/candidates/:id/positions', function(req, res) {
+  var candidateId = req.params.id;
+  var query = req.query;
+  console.log('retrieving candidate \'' + candidateId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
-app.use('/api/candidates/:name', function(req, res) {
-  var candidateName = req.params.name;
-  console.log('retrieving candidate \'' + candidateName + '\'.');
-  candidateservice.getCandidateByName(candidateName, function(data) {
+  candidateservice.getPositionsForCandidate(candidateId, query, function(rankedPositions) {
+    console.log('found positions');
+    res.end();
+  });
+});
+
+app.use('/api/candidates/:id', function(req, res) {
+  var candidateId = req.params.id;
+  console.log('retrieving candidate \'' + candidateId + '\'.');
+  candidateservice.getCandidateById(candidateId, function(data) {
     res.json(data);
   });
 });
 app.use('/api/candidates', function(req, res) {
-  console.log('retrieving candidates');
+  console.log('retrieving candidates.');
 
   var candidateName = req.query.name;
   candidateservice.getCandidates({name: candidateName}, function(data) {
@@ -100,14 +121,6 @@ fs.exists('.credentials', function(exists) {
         console.log('User credentials successfully loaded.');
 //        e3sservice.syncCandidates();
 //        e3sservice.syncPositions();
-
-        // e3sservice.getCandidates(function(candidates) {
-        //   console.log(candidates);
-        // });
-        //
-        // e3sservice.getPositions(function(posotions) {
-        //   console.log(posotions);
-        // });
       }
     });
   }

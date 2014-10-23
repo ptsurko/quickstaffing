@@ -1,7 +1,9 @@
 var e3sservice = require('./e3sservice'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    async = require('async'),
+    positionservice = require('./positionservice');
 
-exports.getCandidates = function(query, callback) {
+function getCandidates(query, callback) {
   e3sservice.getCandidates(function(candidates) {
     var result = candidates;
     if (query.name) {
@@ -13,16 +15,37 @@ exports.getCandidates = function(query, callback) {
   });
 };
 
-exports.getCandidateByName = function(name, callback) {
-  e3sservice.getCandidates(function(err, candidates) {
+function getCandidateById(candidateId, callback) {
+  e3sservice.getCandidates(function(candidates) {
     var candidate = _.find(candidates, function(candidate) {
-       return candidate.fullName == name;
+       return candidate.id == candidateId;
     });
 
-    if (candidate) {
-      callback(null, candidate);
-    } else {
-      callback(new Error("Unable to find person \'" + name + "\'."));
-    }
+    callback(candidate);
   });
 };
+
+function getPositionsForCandidate(candidateId, criteriaRank, callback) {
+  async.parallel([
+    function(callback) {
+      getCandidateById(candidateId, function(candidate) {
+        callback(null, candidate);
+      });
+    },
+    function(callback) {
+      positionservice.getPositions({}, function(positions) {
+        callback(null, positions);
+      });
+    }
+  ], function(err, results) {
+    var candidate = results[0];
+    var positions = results[1];
+//    console.log(candidate);
+//    console.log(positions);
+    callback();
+  })
+};
+
+exports.getPositionsForCandidate = getPositionsForCandidate;
+exports.getCandidateById = getCandidateById;
+exports.getCandidates = getCandidates;
