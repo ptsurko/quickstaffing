@@ -26,7 +26,7 @@ fs.exists('.credentials', function(exists) {
 
         e3sservice.getCandidates(credentials, null, function(candidates) {
           console.log('candidates loaded');
-          //console.log(candidates);
+//          console.log(candidates);
         });
         e3sservice.getPositions(credentials, function(positions) {
           console.log('positions loaded');
@@ -34,7 +34,7 @@ fs.exists('.credentials', function(exists) {
         });
         e3sservice.getProjects(credentials, function(projects) {
           console.log('projects loaded');
-          console.log(projects);
+//          console.log(projects);
         });
       }
     });

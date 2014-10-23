@@ -1,6 +1,7 @@
 var https = require('https'),
     querystring = require('querystring'),
-    fs = require('fs');
+    fs = require('fs'),
+    _ = require('underscore');
 
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
@@ -64,12 +65,15 @@ function mapPersons(data) {
       fullName: person.fullNameSum.full,
       email: person.emailSum,
       id: person.id,
+      title: getFirstItemIfArray(person.title),
       skills: {
         expert: (person.skill.expert || '').split(", "),
         advanced: (person.skill.advanced || '').split(", "),
         intermediate: (person.skill.intermediate || '').split(", "),
         novice: (person.skill.novice || '').split(", ")
-      }
+      },
+      positions: getCandidateTakenPositions(person),
+      projects: getCandidateProjects(person)
     };
   });
 };
@@ -81,7 +85,7 @@ function mapPositions(data) {
       primarySkill: position.primaryskill,
       city: position.city,
       country: position.country,
-      project: position.project,
+      projectName: position.project,
       position: position.position,
       customer: position.customer,
       customerId: position.customerIdSum,
@@ -96,11 +100,47 @@ function mapProjects(data) {
     return {
       id: project.id,
       name: project.name,
-      skills: project.skillSum || []
+      skills: project.skillSum || [],
+      customer: project.customer,
+      customerId: project.customerIdSum
     };
   });
 };
 
+function getCandidateTakenPositions(person) {
+  if (person.workloadSum && person.workloadSum.length) {
+    return _.unique(person.workloadSum.map(function(item) {
+      return item.projectWorkload[0].position;
+    }));
+  }
+  return [];
+};
+
+function getCandidateProjects(person) {
+  var workloadProjects = [];
+  var workhistoryProjects = [];
+  if (person.workloadSum && person.workloadSum.length) {
+    var nonemptyProjects = person.workloadSum.filter(function(item) {
+      return item.projectWorkload[0].project;
+    });
+
+    workloadProjects = nonemptyProjects.map(function(item) {
+      return item.projectWorkload[0].project;
+    });
+  }
+
+  if (person.workhistory && person.workhistory.length) {
+    var nonemptyProjects = person.workhistory.filter(function(item) {
+      return item.epamproject;
+    });
+
+    workhistoryProjects = nonemptyProjects.map(function(item) {
+      return item.epamproject;
+    });
+  }
+
+  return _.unique(_.union(workloadProjects, workhistoryProjects));
+};
 
 function getFirstItemIfArray(array) {
   if (array.length) {
