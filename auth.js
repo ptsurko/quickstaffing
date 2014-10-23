@@ -1,0 +1,2 @@
+
+exports.credentials = {username: '', password: ''};

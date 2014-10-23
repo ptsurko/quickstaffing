@@ -1,7 +1,8 @@
 var https = require('https'),
     querystring = require('querystring'),
     fs = require('fs'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    auth = require('./../auth');
 
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
@@ -25,33 +26,33 @@ function getItems(auth, type, statements, start, limit, callback) {
     hostname: 'e3s.epam.com',
     path: '/rest/e3s-eco-scripting-impl/0.1.0/data/searchFts?' + querystring.stringify(queryParameters),
     method: 'GET',
-    auth: auth.username + ':' + auth.password
+    auth: auth.credentials.username + ':' + auth.credentials.password
   }, function(res) {
     var data = '';
     res.on('data', function(chunk) {
       data += chunk;
     });
     res.on('end', function() {
-      callback(JSON.parse(data));
+      callback(null, JSON.parse(data));
     });
   });
 };
 
-exports.getCandidates = function(auth, availabilitySum, callback) {
-  getItems(auth, EMPLOYEE_ENTITY_TYPE, [{"query":"Available Now","fields":["availabilitySum"]}], null, null, function(data) {
-    callback(mapPersons(data));
+exports.getCandidates = function(callback) {
+  getItems(auth, EMPLOYEE_ENTITY_TYPE, [{"query":"Available Now","fields":["availabilitySum"]}], null, null, function(err, data) {
+    callback(null, mapPersons(data));
   });
 };
 
-exports.getPositions = function(auth, callback) {
-  getItems(auth, POSITION_ENTITY_TYPE, [{"query":"Position","fields":["reqtype"]},{"query":"Open","fields":["stateSum"]}], null, null, function(data) {
-    callback(mapPositions(data));
+exports.getPositions = function(callback) {
+  getItems(auth, POSITION_ENTITY_TYPE, [{"query":"Position","fields":["reqtype"]},{"query":"Open","fields":["stateSum"]}], null, null, function(err, data) {
+    callback(null, mapPositions(data));
   });
 };
 
-exports.getProjects = function(auth, callback) {
-  getItems(auth, PROJECT_ENTITY_TYPE, [{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}], null, null, function(data) {
-    callback(mapProjects(data));
+exports.getProjects = function(callback) {
+  getItems(auth, PROJECT_ENTITY_TYPE, [{"query":"Project", "fields":["typeSum"]},{"query":"Active","fields":["statusSum"]}], null, null, function(err, data) {
+    callback(null, mapProjects(data));
   })
 };
 
