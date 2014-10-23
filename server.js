@@ -3,7 +3,8 @@ var express = require('express'),
     e3sservice = require('./server/e3sservice'),
     auth = require('./auth'),
     candidateservice = require('./server/candidateservice'),
-    positionservice = require('./server/positionservice');
+    positionservice = require('./server/positionservice'),
+    https = require('https');
 
 var credentials = {username: '', password: ''};
 var app = express();
@@ -24,6 +25,21 @@ app.use('/api/positions', function(req, res) {
   });
 });
 
+app.use('/api.candidates/photo/:photoId', function(req, res) {
+  var photoId = req.params.photoId;
+  console.log('retrieving photo ' + photoId + '.');
+
+  https.get({
+    hostname: 'e3s.epam.com',
+    path: '/rest/e3s-app-logo-impl/v1/logo?uri=attachment://' + photoId,
+    method: 'GET',
+    auth: auth.credentials.username + ':' + auth.credentials.password
+  }, function(photoRes) {
+    res.writeHead(200, {'Content-Type': photoRes.headers['content-type']});
+    photoRes.pipe(res);
+  });
+});
+
 app.use('/api/candidates/:name', function(req, res) {
   var candidateName = req.params.name;
   console.log('retrieving candidate \'' + candidateName + '\'.');
@@ -38,6 +54,11 @@ app.use('/api/candidates', function(req, res) {
   candidateservice.getCandidates({name: candidateName}, function(data) {
     res.json(data);
   });
+});
+
+app.use('/init', function(req, res) {
+  e3sservice.syncCandidates();
+  e3sservice.syncPositions();
 });
 
 app.use('/reset', function(req, res) {

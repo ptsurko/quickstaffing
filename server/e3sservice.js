@@ -114,7 +114,8 @@ function mapPersons(data) {
         novice: (person.skill.novice || '').split(", ")
       },
       positions: getCandidateTakenPositions(person),
-      projects: getCandidateProjects(person)
+      projects: getCandidateProjects(person),
+      photoId: getCandidatePhotoId(person)
     };
   });
 }
@@ -181,6 +182,13 @@ function getCandidateProjects(person) {
   }
 
   return _.unique(_.union(workloadProjects, workhistoryProjects));
+}
+
+function getCandidatePhotoId(person) {
+  if (person.photosSum && person.photosSum.length) {
+    return person.photosSum[0].attachment.trim('\/');
+  }
+  return '';
 }
 
 function getFirstItemIfArray(array) {
