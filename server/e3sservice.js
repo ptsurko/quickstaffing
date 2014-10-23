@@ -2,13 +2,12 @@ var https = require('https'),
     querystring = require('querystring'),
     fs = require('fs'),
     _ = require('underscore'),
-    auth = require('./../auth');
+    auth = require('./../auth'),
+    cacheService = require('./cacheservice');
 
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
 var POSITION_ENTITY_TYPE = 'com.epam.e3s.app.position.api.data.PositionProjectionEntity';
-var CANDIDATES_CACHE_FILE_NAME = 'cache/candidates.json';
-var POSITIONS_CACHE_FILE_NAME = 'cache/positions.json';
 
 // Memory storage for candidates.
 var candidates = [];
@@ -43,7 +42,7 @@ function getItems(auth, type, statements, start, limit, callback) {
       callback(JSON.parse(data));
     });
   });
-};
+}
 
 exports.syncCandidates = function() {
   getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,
@@ -66,7 +65,10 @@ exports.syncPositions = function() {
 exports.getCandidates = function(callback) {
   if (candidates.length == 0) {
     console.log('read candidates from cache');
-    readCandidatesFromCache(callback);
+    cacheService.readCandidatesFromCache(function(data) {
+      candidates = data;
+      callback(data);
+    });
   } else {
     console.log('read candidates from memory');
     callback(candidates);
@@ -76,7 +78,10 @@ exports.getCandidates = function(callback) {
 exports.getPositions = function(callback) {
   if (positions.length == 0) {
     console.log('Read positions from cache');
-    readPositionsFromCache(callback);
+    cacheService.readPositionsFromCache(function(data) {
+      positions = data;
+      callback(data);
+    });
   } else {
     console.log('Read positions from memory');
     callback(positions);
@@ -110,7 +115,7 @@ function mapPersons(data) {
       projects: getCandidateProjects(person)
     };
   });
-};
+}
 
 function mapPositions(data) {
   return data.items.map(function(item) {
@@ -126,7 +131,7 @@ function mapPositions(data) {
       id: position.id
     };
   });
-};
+}
 
 function mapProjects(data) {
   return data.items.map(function(item) {
@@ -141,30 +146,6 @@ function mapProjects(data) {
   });
 }
 
-function cacheCandidates(candidates) {
-  fs.writeFile(CANDIDATES_CACHE_FILE_NAME, JSON.stringify(candidates, null, 0), function(err, fd) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Cached candidates');
-    }
-  });
-}
-
-function readCandidatesFromCache(callback) {
-  fs.exists(CANDIDATES_CACHE_FILE_NAME, function() {
-    fs.readFile(CANDIDATES_CACHE_FILE_NAME, function(err, data) {
-      if(err) {
-        console.log('Error while read candidates cache');
-      } else {
-        candidates = JSON.parse(data);
-        callback(candidates);
-      }
-    });
-  });
-}
-
-
 function getCandidateTakenPositions(person) {
   if (person.workloadSum && person.workloadSum.length) {
     return _.unique(person.workloadSum.map(function(item) {
@@ -172,7 +153,7 @@ function getCandidateTakenPositions(person) {
     }));
   }
   return [];
-};
+}
 
 function getCandidateProjects(person) {
   var workloadProjects = [];
@@ -198,29 +179,6 @@ function getCandidateProjects(person) {
   }
 
   return _.unique(_.union(workloadProjects, workhistoryProjects));
-};
-
-function cachePositions(positions) {
-  fs.writeFile(POSITIONS_CACHE_FILE_NAME, JSON.stringify(positions, null, 0), function(err, fd) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Cached positions');
-    }
-  });
-}
-
-function readPositionsFromCache(callback) {
-  fs.exists(POSITIONS_CACHE_FILE_NAME, function() {
-    fs.readFile(POSITIONS_CACHE_FILE_NAME, function(err, data) {
-      if(err) {
-        console.log('Error while read positions cache');
-      } else {
-        positions = JSON.parse(data);
-        callback(positions);
-      }
-    });
-  });
 }
 
 function getFirstItemIfArray(array) {
@@ -228,4 +186,4 @@ function getFirstItemIfArray(array) {
     return array[0];
   }
   return array;
-};
+}

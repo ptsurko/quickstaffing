@@ -55,8 +55,8 @@ fs.exists('.credentials', function(exists) {
         auth.credentials.password = String(lines[1]);
 
         console.log('User credentials successfully loaded.');
-        e3sservice.syncCandidates();
-        e3sservice.syncPositions();
+//        e3sservice.syncCandidates();
+//        e3sservice.syncPositions();
 
         e3sservice.getCandidates(function(candidates) {
           console.log(candidates);
