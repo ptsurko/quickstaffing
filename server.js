@@ -89,13 +89,13 @@ fs.exists('.credentials', function(exists) {
 //        e3sservice.syncCandidates();
 //        e3sservice.syncPositions();
 
-        e3sservice.getCandidates(function(candidates) {
-          console.log(candidates);
-        });
-
-        e3sservice.getPositions(function(posotions) {
-          console.log(posotions);
-        });
+        // e3sservice.getCandidates(function(candidates) {
+        //   console.log(candidates);
+        // });
+        //
+        // e3sservice.getPositions(function(posotions) {
+        //   console.log(posotions);
+        // });
       }
     });
   }

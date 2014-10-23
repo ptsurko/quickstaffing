@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     connect = require('gulp-connect'),
     concat = require('gulp-concat'),
     less = require('gulp-less'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    nodemon = require('gulp-nodemon');
 
 gulp.task('connect', function() {
   connect.server({
@@ -43,6 +44,10 @@ gulp.task('watch', function() {
   gulp.watch('public/**', ['build'])
 });
 
+gulp.task('deploylocal', function () {
+  nodemon({ script: 'server.js'});
+});
+
 gulp.task('build', ['scripts', 'styles']);
 
-gulp.task('default', ['build', 'connect', 'watch']);
+gulp.task('default', ['build', 'deploylocal', 'watch']);
