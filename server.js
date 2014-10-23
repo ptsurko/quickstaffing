@@ -25,7 +25,7 @@ app.use('/api/positions', function(req, res) {
   });
 });
 
-app.use('/api.candidates/photo/:photoId', function(req, res) {
+app.use('/api/candidates/photo/:photoId', function(req, res) {
   var photoId = req.params.photoId;
   console.log('retrieving photo ' + photoId + '.');
 
@@ -56,12 +56,12 @@ app.use('/api/candidates', function(req, res) {
   });
 });
 
-app.use('/init', function(req, res) {
+app.use('/api/init', function(req, res) {
   e3sservice.syncCandidates();
   e3sservice.syncPositions();
 });
 
-app.use('/reset', function(req, res) {
+app.use('/api/reset', function(req, res) {
   //TODO: implement cache reset.
   //       - remove cache files
   //       - clear in-memory cache

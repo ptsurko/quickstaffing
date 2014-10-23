@@ -50,7 +50,7 @@ exports.syncCandidates = function() {
   getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,
       function(data) {
         console.log('Synced candidates');
-        cacheCandidates(mapPersons(data));
+        cacheService.cacheCandidates(mapPersons(data));
       });
 };
 
@@ -60,7 +60,7 @@ exports.syncPositions = function() {
     {"query":"Open","fields":["stateSum"]}], null, null,
       function(data) {
         console.log('Synced positions');
-        cachePositions(mapPositions(data));
+        cacheService.cachePositions(mapPositions(data));
       });
 };
 
@@ -186,7 +186,7 @@ function getCandidateProjects(person) {
 
 function getCandidatePhotoId(person) {
   if (person.photosSum && person.photosSum.length) {
-    return person.photosSum[0].attachment.trim('\/');
+    return person.photosSum[0].replace("attachment:\/\/", "");
   }
   return '';
 }
