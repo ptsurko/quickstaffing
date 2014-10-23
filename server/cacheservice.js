@@ -1,4 +1,5 @@
-var fs = require('fs');
+var fs = require('fs')
+    async = require('async');
 
 var CANDIDATES_CACHE_FILE_NAME = 'cache/candidates.json';
 var POSITIONS_CACHE_FILE_NAME = 'cache/positions.json';
@@ -46,5 +47,26 @@ exports.readCandidatesFromCache = function(callback) {
         callback(candidates);
       }
     });
+  });
+};
+
+exports.clearCache = function(callback) {
+  async.parallel([
+    function(callback) {
+      fs.exists(CANDIDATES_CACHE_FILE_NAME, function() {
+        fs.unlink(CANDIDATES_CACHE_FILE_NAME, function() {
+          callback(null, null);
+        });
+      });
+    },
+    function(callback) {
+      fs.exists(POSITIONS_CACHE_FILE_NAME, function() {
+        fs.unlink(POSITIONS_CACHE_FILE_NAME, function() {
+          callback(null, null);
+        });
+      });
+    }
+  ], function(err, results) {
+    callback();
   });
 };

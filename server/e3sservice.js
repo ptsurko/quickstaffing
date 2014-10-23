@@ -197,3 +197,8 @@ function getFirstItemIfArray(array) {
   }
   return array;
 }
+
+exports.clearMemoryCache = function() {
+  positions = [];
+  candidates = [];
+};

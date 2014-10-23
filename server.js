@@ -4,6 +4,7 @@ var express = require('express'),
     auth = require('./auth'),
     candidateservice = require('./server/candidateservice'),
     positionservice = require('./server/positionservice'),
+    cacheservice = require('./server/cacheservice'),
     https = require('https');
 
 var credentials = {username: '', password: ''};
@@ -62,9 +63,11 @@ app.use('/api/init', function(req, res) {
 });
 
 app.use('/api/reset', function(req, res) {
-  //TODO: implement cache reset.
-  //       - remove cache files
-  //       - clear in-memory cache
+  e3sservice.clearMemoryCache();
+  cacheservice.clearCache(function() {
+    console.log('Caches were successfully cleared.');
+    res.status(200).send('done').end();
+  });
 });
 
 app.use('/', express.static(__dirname + '/public'));
