@@ -5,7 +5,8 @@ var express = require('express'),
     candidateservice = require('./server/candidateservice'),
     positionservice = require('./server/positionservice'),
     cacheservice = require('./server/cacheservice'),
-    https = require('https');
+    https = require('https'),
+    async = require('async');
 
 var credentials = {username: '', password: ''};
 var app = express();
@@ -58,15 +59,23 @@ app.use('/api/candidates', function(req, res) {
 });
 
 app.use('/api/init', function(req, res) {
-  e3sservice.syncCandidates();
-  e3sservice.syncPositions();
+  async.parallel([
+    function(callback) {
+      e3sservice.syncCandidates(function() { callback();});
+    },
+    function(callback) {
+      e3sservice.syncPositions(function() { callback();});
+    },
+  ], function(err, results) {
+    res.status(200).send('caches were successfully initialized.').end();
+  });
 });
 
 app.use('/api/reset', function(req, res) {
   e3sservice.clearMemoryCache();
   cacheservice.clearCache(function() {
     console.log('Caches were successfully cleared.');
-    res.status(200).send('done').end();
+    res.status(200).send('caches were successfully reset.').end();
   });
 });
 

@@ -46,21 +46,25 @@ function getItems(auth, type, statements, start, limit, callback) {
   });
 }
 
-exports.syncCandidates = function() {
+exports.syncCandidates = function(callback) {
   getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,
       function(data) {
         console.log('Synced candidates');
         cacheService.cacheCandidates(mapPersons(data));
+
+        callback();
       });
 };
 
-exports.syncPositions = function() {
+exports.syncPositions = function(callback) {
   getItems(auth, POSITION_ENTITY_TYPE, [
     {"query":"Position","fields":["reqtype"]},
     {"query":"Open","fields":["stateSum"]}], null, null,
       function(data) {
         console.log('Synced positions');
         cacheService.cachePositions(mapPositions(data));
+
+        callback();
       });
 };
 
