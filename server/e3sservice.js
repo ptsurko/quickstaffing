@@ -164,6 +164,7 @@ function readCandidatesFromCache(callback) {
   });
 }
 
+
 function getCandidateTakenPositions(person) {
   if (person.workloadSum && person.workloadSum.length) {
     return _.unique(person.workloadSum.map(function(item) {
