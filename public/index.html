@@ -4,7 +4,8 @@
   <!--<link type="text/css" rel="stylesheet" media="all" href="css/bootstrap.css">-->
   <!--<link type="text/css" rel="stylesheet" media="all" href="css/bootstrap-theme.css">-->
   <link type="text/css" rel="stylesheet" media="all" href="css/style.css">
-  <link href="css/ng-slider.min.css" rel="stylesheet" />
+  <link type="text/css" href="css/ng-slider.min.css" rel="stylesheet" />
+  <link type="text/css" href="css/ngDialog.css" rel="stylesheet" />
 
   <title>Quick Staffing tool</title>
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -18,12 +19,15 @@
   <script src="js/libs/underscore-min.js"></script>
   <script src="js/libs/radarchart.js"></script>
   <script src="ng-slider.min.js"></script>
+  <script src="js/libs/ngDialog.js"></script>
 </head>
 <body ng-app="QuickStaffing" ng-controller="IndexController as ctrl">
   <h1>Quick Staffing tool</h1>
 
   <div>
-    <div id="filter">
+    <div id="filter" ng-show="ctrl.visible"
+         style="padding: 30px; position: absolute; top: 95px; left: 18px; z-index: 10; background: #ffffff; border: 1px solid #cdcdcd; ">
+      <div style="cursor: default; position: absolute; top: 12px; left: 540px;" ng-click="ctrl.visible = false">X</div>
       <form>
         <div class="filter-item">
           <span class="label">Location</span>
@@ -58,8 +62,8 @@
       </form>
     </div>
     <input class="form-control" type="text" placeholder="Project name"
-        ng-model="ctrl.projectName" style="width: 400px;" ng-change="ctrl.changeProjectName()" />
-
+        ng-model="ctrl.projectName" style="margin-bottom: 20px; margin-left: 10px; font-size: 18px; width: 559px;" ng-change="ctrl.changeProjectName()" />
+    <img src="img/arrow.jpg" ng-click="ctrl.visible = true" width="15" height="15" style="position: absolute; top: 75px; left: 560px; z-index: 10;" />
     <div class="position-description">
       <div class="description-sub">
         <div><b>Project:</b><span class="value">{{ ctrl.getSelectedPosition().projectName }}</span></div>
