@@ -18,10 +18,10 @@
 }
 
 .candidate-item {
-  border: solid 2px;
+  border: solid 1px;
   float: left;
   font-size: 14px;
-  height: 160px;
+  height: 140px;
   width: 100px;
 }
 
@@ -29,4 +29,25 @@
   border: solid 0px;
   margin-left: 100px;
   width: 1020px;
+}
+
+#filter {
+  display: inline-block;
+  vertical-align: top;
+  width: 300px;
+}
+
+.filter-item {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.filter-item .label {
+  display: inline-block;
+  width: 100px;
+}
+
+#wiring {
+  border: solid 0px;
+  display: inline-block;
 }

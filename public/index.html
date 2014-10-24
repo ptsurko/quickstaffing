@@ -2,33 +2,72 @@
 <html>
 <head>
   <link type="text/css" rel="stylesheet" media="all" href="css/style.css">
+  <link href="css/ng-slider.min.css" rel="stylesheet" />
+
   <title>Quick Staffing tool</title>
-  <script src="js/libs/angular.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <script src="js/libs/angular.js"></script>
+  <script src="js/libs/angular-sanitize.js"></script>
   <script src="js/libs/kinetic.min.js"></script>
   <script src="js/libs/underscore-min.js"></script>
+  <script src="ng-slider.min.js"></script>
 </head>
 <body ng-app="QuickStaffing" ng-controller="IndexController as ctrl">
   <h1>Quick Staffing tool</h1>
 
-  <div id="filter">
-    <form>
+  <style>
+    .jslider {
+      display: inline-block;
+      width: 60%;
+    }
+  </style>
+  <div>
+    <div id="filter">
+      <form>
+        <div class="filter-item">
+          <span class="label">Location</span>
+          <input ng-model="value" type="text" id="mySlider1" slider options="options" />
+        </div>
+        <div class="filter-item">
+          <span class="label">Primary skill</span>
+        </div>
+        <div class="filter-item">
+          <span class="label">Start date</span>
+          <input ng-model="value" type="text" id="mySlider2" slider options="options" />
+        </div>
+        <div class="filter-item">
+          <span class="label">Work load</span>
+          <input ng-model="value" type="text" id="mySlider3" slider options="options" />
+        </div>
+        <div class="filter-item">
+          <span class="label">Seniority</span>
+          <input ng-model="value" type="text" id="mySlider4" slider options="options" />
+        </div>
+        <div class="filter-item">
+          <span class="label">English level</span>
+          <input ng-model="value" type="text" id="mySlider5" slider options="options" />
+        </div>
 
-    </form>
-  </div>
-  <div id="wiring" style="margin-left: 300px;">
-    <div id="positions-container">
-      <div class="position-item" ng-repeat="position in ctrl.positions"
-          ng-click="ctrl.matchCandidates(position, $event, $index)">{{ position.customer }}</div>
+      </form>
     </div>
+    <div id="wiring">
+      <div id="positions-container">
+        <div class="position-item" ng-repeat="position in ctrl.positions"
+            ng-click="ctrl.matchCandidates(position, $event, $index)">
+          <img style="width: 100px; height: 60px;" src="img/position-logo.png" />
+          {{ position.customer }}</div>
+      </div>
 
-    <div id="canvas-container"></div>
+      <div id="canvas-container"></div>
 
-    <div id="candidates-container">
+      <div id="candidates-container">
 
-    <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
-        ng-click="ctrl.selectCandidate($index)">
-      <img style="width: 100px; height: 100px;" ng-src="/api/candidates/photo/dbd0e119-4155-43a6-aeda-dcae0f094696" />
-      {{ candidate.fullName }}</div>
+      <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
+          ng-click="ctrl.selectCandidate($index)">
+        <img style="width: 100px; height: 100px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
+        {{ candidate.fullName }}</div>
+      </div>
     </div>
   </div>
   <script src="js/mathutil.js"></script>

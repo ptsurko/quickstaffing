@@ -1,6 +1,14 @@
-var IndexController = function(positionservice, candidateservice) {
+var IndexController = function($scope, positionservice, candidateservice) {
   this.positionservice_ = positionservice;
   this.candidateservice_ = candidateservice;
+
+  $scope.value = "50";
+  $scope.options = {
+    from: 1,
+    to: 50,
+    step: 1,
+    dimension: " km"
+  };
 
   this.stage_ = new Kinetic.Stage({
     container: 'canvas-container',
@@ -51,7 +59,7 @@ IndexController.prototype.onPositionsLoaded_ = function(response) {
 };
 
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
-  var elementWidth = $event.srcElement.clientWidth;
+  var elementWidth = $event.currentTarget.clientWidth;
   var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
   var x1 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
 
