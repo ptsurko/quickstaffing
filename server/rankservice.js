@@ -28,6 +28,35 @@ function rankCandidatesToPosition(position, candidates, criteriaRank) {
   return result;
 };
 
+function rankPositionsToCandidate(candidate, positions, criteriaRank) {
+  var keys = _.keys(criteriaRank);
+  var rankedPositions = positions.map(function(position) {
+    var rank = 0;
+    var rankInfo = {};
+    _.forEach(keys, function(key) {
+      if ((candidate[key] && position[key]) &&
+          (candidate[key] == position[key])) {
+        rank += criteriaRank[key];
+        rankInfo[key] = criteriaRank[key];
+      }
+    });
+    return {
+      rank: rank,
+      rankInfo: rankInfo,
+      candidate: candidate,
+      position: position
+    };
+  });
+
+  var result = _.sortBy(rankedPositions, function(item) {
+    return item.rank;
+  });
+  result.reverse();
+  return result;
+};
+
+
+
 exports.rankCandidatesToPosition = rankCandidatesToPosition;
 //TODO: It should work for now.
-exports.rankPositionToCandidates = rankCandidatesToPosition;
+exports.rankPositionToCandidates = rankPositionsToCandidate;

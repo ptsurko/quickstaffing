@@ -1,6 +1,7 @@
 var e3sservice = require('./e3sservice'),
     _ = require('underscore'),
     async = require('async'),
+    rankservice = require('./rankservice'),
     positionservice = require('./positionservice');
 
 function getCandidates(query, callback) {
@@ -25,7 +26,7 @@ function getCandidateById(candidateId, callback) {
   });
 };
 
-function getPositionsForCandidate(candidateId, criteriaRank, start, limit, callback) {
+function getPositionsForCandidate(candidateId, criteriaRank, callback) {
   async.parallel([
     function(callback) {
       getCandidateById(candidateId, function(candidate) {
@@ -41,8 +42,7 @@ function getPositionsForCandidate(candidateId, criteriaRank, start, limit, callb
     var candidate = results[0];
     var positions = results[1];
 
-    var rankedCandidates = rankservice.rankCandidatesToPosition(candidate, positions, criteriaRank);
-    callback(_.chain(rankedCandidates).rest(start).first(limit).value());
+    callback(rankservice.rankPositionToCandidates(candidate, positions, criteriaRank));
   })
 };
 

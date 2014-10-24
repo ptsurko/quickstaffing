@@ -16,7 +16,7 @@
    7. /api/candidates
    8. /api/candidates?name=Pave - searches candidates by full name (startWith)
    9. /api/candidates/a1a3bc1e-1d18-4401-92f8-d2f22e8d7527
-  10. /api/candidates/a1a3bc1e-1d18-4401-92f8-d2f22e8d7527/positions?primarySkill=10&city=5
+  10. /api/candidates/6bd94079-d554-406e-8a7c-cf8c213cde79/positions?primarySkill=10&country=10&limit=1&start=2
   11. /api/candidates/photo/dbd0e119-4155-43a6-aeda-dcae0f094696
 
   12. adding parameter ?pretty=true to all api requests makes returned JSON mode readable.
