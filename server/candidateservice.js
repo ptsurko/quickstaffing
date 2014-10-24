@@ -1,6 +1,7 @@
 var e3sservice = require('./e3sservice'),
     _ = require('underscore'),
     async = require('async'),
+    rankservice = require('./rankservice'),
     positionservice = require('./positionservice');
 
 function getCandidates(query, callback) {
@@ -41,8 +42,7 @@ function getPositionsForCandidate(candidateId, criteriaRank, callback) {
     var candidate = results[0];
     var positions = results[1];
 
-    var rankedCandidates = rankservice.rankCandidatesToPosition(candidate, positions, criteriaRank);
-    callback(_.first(rankedCandidates, 10));
+    callback(rankservice.rankPositionToCandidates(candidate, positions, criteriaRank));
   })
 };
 

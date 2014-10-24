@@ -43,8 +43,7 @@ function getCandidatesForPosition(positionId, criteriaRank, callback) {
     var position = results[0];
     var candidates = results[1];
 
-    var rankedCandidates = rankservice.rankCandidatesToPosition(position, candidates, criteriaRank);
-    callback(_.first(rankedCandidates, 10));
+    callback(rankservice.rankCandidatesToPosition(position, candidates, criteriaRank));
   })
 };
 
