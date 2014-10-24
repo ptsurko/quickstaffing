@@ -34,10 +34,10 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //     debugger
   //   });
 
-  // this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {primarySkill: 10})
-  //   .then(function(data) {
-  //     debugger
-  //   });
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location:'city'})
+    .then(function(data) {
+      console.log(data);
+    });
   //
   // this.candidateservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {primarySkill: 10})
   //   .then(function(data) {

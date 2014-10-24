@@ -2,18 +2,33 @@ var RankService = function() {
 
 };
 
+var locationRanks = [
+  {location: 'city', match: function(entity1, entity2) { return entity1.city == entity2.city}, rank: 3},
+  {location: 'country', match: function(entity1, entity2) { return entity1.country == entity2.country}, rank: 2},
+  {location: 'region', match: function(entity1, entity2) { return entity1.region == entity2.region}, rank: 2},
+  {location: 'ww', match: function(entity1, entity2) { return true}, rank: 0}
+];
+
 RankService.prototype.rankCandidatesToPosition = function(position, candidates, criteriaRank) {
    var keys = _.keys(criteriaRank);
    var rankedCandidates = candidates.map(function(candidate) {
      var rank = 0;
      var rankInfo = {};
      _.forEach(keys, function(key) {
-       if ((position[key] && candidate[key]) &&
-           (( _.isString(position[key]) && _.isArray(candidate[key]) && _.indexOf(candidate[key], position[key]) >= 0) ||
-            (position[key] == candidate[key]))) {
-         rank += criteriaRank[key];
-         rankInfo[key] = criteriaRank[key];
-       }
+        if (key == "location") {
+          for(var i = 0; i < locationRanks.length; i++) {
+            var locationRank = locationRanks[i].match(position, candidate) ? locationRanks[i].rank : 0;
+            if (locationRank || criteriaRank.location == locationRanks[i].location) {
+              rank += locationRank;
+              break;
+            }
+          }
+        } else if (position[key] && candidate[key]) {
+          if (position[key] == candidate[key]) {
+            rank += criteriaRank[key];
+            rankInfo[key] = criteriaRank[key];
+          }
+        }
      });
      return {
        rank: rank,
@@ -27,6 +42,11 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
      return item.rank;
    });
    result.reverse();
+   if (result && result.length && result[0].rank > 0) {
+     result = _.filter(result, function(item) {
+       return item.rank > 0;
+     });
+   }
    return result;
 };
 

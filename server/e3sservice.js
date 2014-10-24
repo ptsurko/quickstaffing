@@ -127,7 +127,10 @@ function mapPersons(data) {
       },
       positions: getCandidateTakenPositions(person),
       projects: getCandidateProjects(person),
-      photoId: getCandidatePhotoId(person)
+      photoId: getCandidatePhotoId(person),
+      english: generateEnglishLevel(),
+      workload: generateWorkload(),
+      startDate: generateStartDate()
     };
   });
 }
@@ -201,21 +204,38 @@ function getCandidateProjects(person) {
   }
 
   return _.unique(_.union(workloadProjects, workhistoryProjects));
-}
+};
+
+function generateEnglishLevel() {
+  var level = Math.floor((Math.random() * 2) + 1);
+  var grade = Math.floor((Math.random() * 3));
+
+  return String.fromCharCode("A".charCodeAt(0) + grade) + level;
+};
+
+function generateWorkload() {
+  return Number(Math.random().toFixed(2));
+};
 
 function getCandidatePhotoId(person) {
   if (person.photosSum && person.photosSum.length) {
     return person.photosSum[0].replace("attachment:\/\/", "");
   }
   return '';
-}
+};
+
+function generateStartDate() {
+  var start = new Date(2014, 0, 1);
+  var end = new Date(2015, 10, 1);
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+};
 
 function getFirstItemIfArray(array) {
   if (array.length) {
     return array[0];
   }
   return array;
-}
+};
 
 exports.clearMemoryCache = function() {
   positions = [];
