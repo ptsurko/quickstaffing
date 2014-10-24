@@ -37,18 +37,22 @@ function getItems(auth, type, statements, start, limit, callback) {
     method: 'GET',
     auth: auth.credentials.username + ':' + auth.credentials.password
   }, function(res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-    res.on('end', function() {
-      console.log('\'' + type + '\' data has been successfully loaded.');
-      callback(JSON.parse(data));
-    });
-  }).on('error', function(e) {
-    console.log("Got error trying to load \'" + type + "\': " + e.message);
-  });
-}
+    if (res.statusCode == 200) {
+      var data = '';
+      res.on('data', function (chunk) {
+        data += chunk;
+      });
+      res.on('end', function () {
+        console.log('\'' + type + '\' data has been successfully loaded.');
+        console.log(data);
+        callback(JSON.parse(data));
+      });
+    } else {
+      console.log("Got error trying to load \'" + type + "\': " + res.statusCode);
+      callback([]);
+    }
+  })
+};
 
 exports.syncCandidates = function(callback) {
   getItems(auth, EMPLOYEE_ENTITY_TYPE,[{"query":"Available Now","fields":["availabilitySum"]}], null, null,

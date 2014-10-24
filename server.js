@@ -38,12 +38,11 @@ app.use(function(req, res, next) {
 
 app.use('/api/positions/:id/candidates', function(req, res) {
   var positionId = req.params.id;
-  var query = _.extend({}, rankingCriteria, req.query);
+  var query = extractRankingCriteria(req.query);
   console.log('retrieving best candidates for position \'' + positionId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
-  positionservice.getCandidatesForPosition(positionId, query, function(rankedCandidates) {
-    console.log('found candidates');
-    res.end();
+  positionservice.getCandidatesForPosition(positionId, query, function(data) {
+    res.json(data);
   });
 });
 app.use('/api/positions/:id', function(req, res) {
@@ -78,12 +77,11 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
 });
 app.use('/api/candidates/:id/positions', function(req, res) {
   var candidateId = req.params.id;
-  var query = _.extend({}, rankingCriteria, req.query);
+  var query = extractRankingCriteria(req.query);
   console.log('retrieving candidate \'' + candidateId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
-  candidateservice.getPositionsForCandidate(candidateId, query, function(rankedPositions) {
-    console.log('found positions');
-    res.end();
+  candidateservice.getPositionsForCandidate(candidateId, query, function(data) {
+    res.json(data);
   });
 });
 
@@ -149,3 +147,12 @@ fs.exists('.credentials', function(exists) {
     });
   }
 });
+
+
+function extractRankingCriteria(query) {
+  var filteredQuery =_.pick(_.extend({}, rankingCriteria, query), 'primarySkill', 'country', 'city', 'position');
+  _.forEach(_.keys(filteredQuery), function(key) {
+    filteredQuery[key] = parseInt(filteredQuery[key], 0);
+  });
+  return filteredQuery;
+}
