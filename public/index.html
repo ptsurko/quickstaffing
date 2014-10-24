@@ -83,18 +83,24 @@
           <div>{{ position.position }}</div>
         </div>
       </div>
-
+x
       <div id="canvas-container"></div>
         <div id="candidates-container">
           <div class="candidate-item" ng-class="{selected: ctrl.isCandidateSelected(candidate)}"
-              ng-repeat="candidate in ctrl.candidates" ng-click="ctrl.selectCandidate(candidate)">
-            <img style="width: 105px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
-            <div><b>{{ candidate.fullName }}</b></div>
+              ng-repeat="candidate in ctrl.candidates" >
+              <div ng-click="ctrl.selectCandidate(candidate)">
+                <img style="width: 105px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
+                <div><b>{{ candidate.fullName }}</b></div>
+              </div>
+              <button type="button" ng-click="ctrl.showCompareDialog = true; return;">Compare</button>
           </div>
       </div>
     </div>
   </div>
-  <div radar selectedCandidates="ctrl.selectedCandidates"></div>
+  <div ng-show="ctrl.showCompareDialog" class="comparedialog">
+    <button type="button" style="float:right" ng-click="ctrl.showCompareDialog = false">X</button>
+    <div radar selectedCandidates="ctrl.selectedCandidates"></div>
+  </div>
   <script src="js/mathutil.js"></script>
   <script src="js/services/e3sservice.js"></script>
   <script src="js/services/rankservice.js"></script>

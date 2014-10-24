@@ -45,6 +45,7 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
       }
       if (locationRanks[i].match(position, candidate)) {
         rank += 1 + locationRankMap[locationRanks[i].location] / (locationRankMap.city * rankFactor);
+        rankInfo.location = locationRanks[i].location;
         break;
       }
     }
@@ -52,14 +53,17 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
     //english
     if (candidate.english > criteriaRank.english) {
       rank += 1 + englishRankMap[candidate.english] / (englishRankMap.C2 * rankFactor);
+      rankInfo.english = candidate.english;
     }
 
     if (candidate.primarySkill == position.primarySkill) {
       rank += 1;
+      rankInfo.primarySkill = candidate.primarySkill;
     }
 
     //workload
     rank += candidate.workload > criteriaRank.workload ? 1 : 0;
+    rankInfo.workload = candidate.workload;
 
     if (criteriaRank.startDate && criteriaRank.endDate) {
       //start/end dates
