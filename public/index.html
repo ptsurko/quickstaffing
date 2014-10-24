@@ -51,7 +51,7 @@
         </div>
       </form>
     </div>
-
+    <input type="text" ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()" class="form-control" placeholder="Text input">
     <div id="wiring">
       <div id="positions-container">
         <div class="position-item" ng-repeat="position in ctrl.positions"

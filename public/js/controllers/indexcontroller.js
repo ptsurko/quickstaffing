@@ -14,6 +14,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.selectedCandidate_ = 3;
   this.selectedPositionIndex_ = 2;
 
+  this.projectName = '';
   this.rankOptions = {
     location: {
       from: 1,
@@ -87,10 +88,10 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //     debugger
   //   });
 
-//  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
-//    .then(function(data) {
-//      console.log(data);
-//    });
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
+    .then(function(data) {
+      console.log(data);
+    });
   //
   // this.candidateservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {primarySkill: 10})
   //   .then(function(data) {
@@ -105,7 +106,7 @@ IndexController.prototype.loadCandidates_ = function() {
 };
 
 IndexController.prototype.loadPositions_ = function() {
-  this.positionservice_.getPositions().then(this.onPositionsLoaded_.bind(this));
+  this.positionservice_.getPositions({project: this.projectName}).then(this.onPositionsLoaded_.bind(this));
 };
 
 IndexController.prototype.onCandidatesLoaded_ = function(response) {
@@ -196,4 +197,8 @@ IndexController.prototype.getCandidatesForPosition = function(positionId) {
               this.drawLine_(x1, x2, item.rank / 5);
             }, this);
       }.bind(this));
+};
+
+IndexController.prototype.changeProjectName = function() {
+  this.loadPositions_();
 };

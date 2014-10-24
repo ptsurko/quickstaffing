@@ -27,7 +27,7 @@ function getItems(auth, type, statements, start, limit, callback) {
     query: JSON.stringify({
       statements: statements || [{'query': '*'}],
       start: start || 0,
-      limit: limit || 1000 //5000
+      limit: limit || 2000 //5000
     })
   };
 
@@ -67,7 +67,7 @@ exports.syncCandidates = function(callback) {
 exports.syncPositions = function(callback) {
   getItems(auth, POSITION_ENTITY_TYPE, [
     {"query":"Position","fields":["reqtype"]},
-    {"query":"Open","fields":["stateSum"]}], null, null,
+    ], null, null,
       function(data) {
         console.log('Synced positions');
         cacheService.cachePositions(mapPositions(data));

@@ -5,11 +5,17 @@ var PositionService = function(e3sservice, rankservice, $q) {
   this.q_ = $q;
 };
 
-PositionService.prototype.getPositions = function(options) {
+PositionService.prototype.getPositions = function(query, options) {
   var opt = _.extend({}, {start:0, limit: 10}, options);
   return this.e3sservice_.getPositions()
       .then(function(data) {
-        return _.chain(data).rest(opt.start).first(opt.limit).value();
+        var result = data;
+        if (query && query.project) {
+          result = _.filter(result, function(position) {
+            return position.projectName && position.projectName.toLowerCase().indexOf(query.project.toLowerCase()) == 0;
+          });
+        }
+        return _.chain(result).rest(opt.start).first(opt.limit).value();
       });
 };
 
@@ -35,7 +41,5 @@ PositionService.prototype.getCandidatesForPosition = function(positionId, criter
 
     var rankedCandidates = this.rankservice_.rankCandidatesToPosition(position, candidates, criteria);
     return _.chain(rankedCandidates).rest(opt.start).first(opt.limit).value();
-  }, this), function() {
-    debugger
-  });
+  }, this));
 };
