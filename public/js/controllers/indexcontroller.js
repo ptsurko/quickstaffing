@@ -9,69 +9,11 @@ var IndexController = function($scope, $http) {
   });
   this.layer_ = new Kinetic.Layer();
 
-  this.candidates = [{
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  },{
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }, {
-    fullName: 'Dzmitry Ulasau'
-  }];
+  this.positions = [];
+  this.candidates = [];
 
-  this.positions = [{
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  },{
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }, {
-    projectName: 'Signpost',
-    customer: 'Google',
-    id: 1111
-  }];
+  this.loadCandidates_();
+  this.loadPositions_();
 };
 
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
@@ -90,8 +32,6 @@ IndexController.prototype.selectCandidate = function($index) {
 };
 
 var driveToIndex = 8;
-
-
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -139,6 +79,26 @@ IndexController.prototype.calcX_ = function(a, b, y) {
     return y;
   }
   return (y - b) / a;
+};
+
+IndexController.prototype.loadCandidates_ = function() {
+  this.http_.get('/api/candidates').then(this.onCandidatesLoaded_.bind(this), this.errorHandler_);
+};
+
+IndexController.prototype.loadPositions_ = function() {
+  this.http_.get('/api/positions').then(this.onPositionsLoaded_.bind(this), this.errorHandler_);
+};
+
+IndexController.prototype.onCandidatesLoaded_ = function(response) {
+  this.candidates = response.data;
+};
+
+IndexController.prototype.onPositionsLoaded_ = function(response) {
+  this.positions = response.data;
+};
+
+IndexController.prototype.errorHandler_ = function(err) {
+  throw new Error('Error during get request');
 };
 
 angular.module('QuickStaffing', [])
