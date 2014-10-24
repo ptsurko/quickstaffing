@@ -9,13 +9,18 @@
 
 .position-item {
   border: 1px solid #cdcdcd;
+  cursor: default;
   float: left;
   font-size: 14px;
   height: 115px;
   margin: 3px;
   padding: 3px;
-  width: 180px;
   text-align: left;
+  width: 180px;
+}
+
+.position-item:hover, .candidate-item:hover {
+  border: 1px solid #969696;
 }
 
 .position-item.selected {
@@ -24,6 +29,7 @@
 }
 
 .candidate-item {
+  cursor: default;
   border: 1px solid #cdcdcd;
   float: left;
   font-size: 16px;
