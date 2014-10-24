@@ -25,6 +25,8 @@ var englishRankMap = {
   C2: 5
 };
 
+var rankFactor = 4;
+
 RankService.prototype.rankCandidatesToPosition = function(position, candidates, criteriaRank) {
   var keys = _.keys(criteriaRank);
   //TODO: need to add filtering
@@ -32,25 +34,37 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
   _.forEach(candidates, function(candidate) {
     var rank = 0;
     var rankInfo = {};
-    _.forEach(keys, function(key) {
-      if (key == "location") {
-        for(var i = 0; i < locationRanks.length; i++) {
-          if (locationRanks[i].match(position, candidate)) {
-            rank += 1 + locationRankMap[locationRanks[i].location] / locationRankMap.city;
-            break;
-          }
-          //if (locationRankMap[locationRanks[i].location] == )
-        }
-      } else if (key == "english") {
 
-      } else if (position[key] && candidate[key]) {
-        if (position[key] == candidate[key]) {
-          rank += criteriaRank[key];
-          rankInfo[key] = criteriaRank[key];
-        }
+    //location
+    for(var i = 0; i < locationRanks.length; i++) {
+      if (locationRankMap[criteriaRank.location] > locationRankMap[locationRanks[i].location]) {
+        break;
       }
-    });
-    if (rank > keys.length) {
+      if (locationRanks[i].match(position, candidate)) {
+        rank += 1 + locationRankMap[locationRanks[i].location] / (locationRankMap.city * rankFactor);
+        break;
+      }
+    }
+
+    //english
+    if (candidate.english > criteriaRank.english) {
+      rank += 1 + englishRankMap[candidate.english] / (englishRankMap.C2 * rankFactor);
+    }
+
+    //workload
+    rank += candidate.workload > criteriaRank.workload ? 1 : 0;
+
+    //start/end dates
+    var projectStartDate = new Date(Date.parse(position.startDate));
+    var candidateStartDate = new Date(Date.parse(candidate.startDate));
+    if (projectStartDate <= criteriaRank.endDate &&
+        candidateStartDate >= criteriaRank.startDate && candidateStartDate <= criteriaRank.endDate) {
+      rank += 1;
+
+      rank += (candidateStartDate.getTime() - projectStartDate.getTime()) / ((criteriaRank.endDate.getTime() - projectStartDate.getTime()) * rankFactor);
+    }
+
+    if (rank > 4) {
       rankedCandidates.push({
         rank: rank,
         rankInfo: rankInfo,
@@ -64,11 +78,6 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
      return item.rank;
    });
    result.reverse();
-  //  if (result && result.length && result[0].rank > 0) {
-  //    result = _.filter(result, function(item) {
-  //      return item.rank > 0;
-  //    });
-  //  }
    return result;
 };
 

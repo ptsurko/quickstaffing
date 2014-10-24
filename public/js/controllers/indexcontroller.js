@@ -87,7 +87,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //     debugger
   //   });
 
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location:'city'})
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
     .then(function(data) {
       console.log(data);
     });

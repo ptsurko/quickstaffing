@@ -24,6 +24,8 @@ PositionService.prototype.getPosition = function(positionId) {
 
 PositionService.prototype.getCandidatesForPosition = function(positionId, criteriaRank, options) {
   var opt = _.extend({}, {start:0, limit: 10}, options);
+  var criteria = _.extend({}, {workload: 0, english: 'A1', location: 'ww'}, criteriaRank);
+  console.log(criteria);
   return this.q_.all([
     this.getPosition(positionId),
     this.e3sservice_.getCandidates(),
@@ -31,7 +33,9 @@ PositionService.prototype.getCandidatesForPosition = function(positionId, criter
     var position = data[0];
     var candidates = data[1];
 
-    var rankedCandidates = this.rankservice_.rankCandidatesToPosition(position, candidates, criteriaRank);
+    var rankedCandidates = this.rankservice_.rankCandidatesToPosition(position, candidates, criteria);
     return _.chain(rankedCandidates).rest(opt.start).first(opt.limit).value();
-  }, this));
+  }, this), function() {
+    debugger
+  });
 };

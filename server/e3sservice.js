@@ -146,7 +146,8 @@ function mapPositions(data) {
       position: position.position,
       customer: position.customer,
       customerId: position.customerIdSum,
-      id: position.id
+      id: position.id,
+      startDate: generateStartDate()
     };
   });
 }
