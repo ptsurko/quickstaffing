@@ -21,7 +21,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
       to: 4,
       step: 1,
       smooth: false,
-      dimension: " km",
+      dimension: " ",
       scale: ['city', 'region', 'country', 'world wide']
     },
     primarySkill: {
@@ -53,7 +53,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
       to: 4,
       step: 1,
       smooth: false,
-      dimension: " km",
+      dimension: " ",
       scale: ['city', 'region', 'country', 'world wide']
     },
     englishLevel: {
@@ -61,7 +61,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
       to: 6,
       step: 1,
       smooth: false,
-      dimension: " km",
+      dimension: " ",
       scale: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
     }
   };
