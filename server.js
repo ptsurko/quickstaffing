@@ -78,7 +78,10 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
     method: 'GET',
     auth: auth.credentials.username + ':' + auth.credentials.password
   }, function(photoRes) {
-    res.writeHead(200, {'Content-Type': photoRes.headers['content-type']});
+    res.status(200);
+    res.setHeader('Content-Type', photoRes.headers['content-type']); // 4 days
+    res.setHeader('Cache-Control', 'public, max-age=345600'); // 4 days
+    res.setHeader('Expires', new Date(Date.now() + 345600000).toUTCString());
     photoRes.pipe(res);
   });
 });

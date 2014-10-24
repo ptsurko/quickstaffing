@@ -9,13 +9,12 @@ var IndexController = function($scope, positionservice, candidateservice) {
   });
   this.layer_ = new Kinetic.Layer();
 
-  this.projectName = '';
   this.positions = [];
   this.candidates = [];
   this.selectedCandidate_ = 3;
   this.selectedPositionIndex_ = 2;
 
-
+  this.projectName = '';
   this.rankOptions = {
     location: {
       from: 1,
@@ -79,8 +78,6 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.loadCandidates_();
   this.loadPositions_();
 
-
-
   // this.positionservice_.getPosition("64de8762-6634-4176-891e-8a69cdae3a50")
   //   .then(function(data) {
   //     debugger
@@ -90,7 +87,6 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //   .then(function(data) {
   //     debugger
   //   });
-
   this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
     .then(function(data) {
       console.log(data);
@@ -176,5 +172,5 @@ IndexController.prototype.getCandidatesForPosition = function(positionId) {
 };
 
 IndexController.prototype.changeProjectName = function() {
-  this.loadCandidates_();
+  this.loadPositions_();
 };

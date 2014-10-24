@@ -31,6 +31,9 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
   var keys = _.keys(criteriaRank);
   //TODO: need to add filtering
   var rankedCandidates = [];
+  var requiredRank = 3;
+  requiredRank += (criteriaRank.startDate && criteriaRank.endDate) ? 1 : 0;
+
   _.forEach(candidates, function(candidate) {
     var rank = 0;
     var rankInfo = {};
@@ -54,17 +57,20 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
     //workload
     rank += candidate.workload > criteriaRank.workload ? 1 : 0;
 
-    //start/end dates
-    var projectStartDate = new Date(Date.parse(position.startDate));
-    var candidateStartDate = new Date(Date.parse(candidate.startDate));
-    if (projectStartDate <= criteriaRank.endDate &&
-        candidateStartDate >= criteriaRank.startDate && candidateStartDate <= criteriaRank.endDate) {
-      rank += 1;
+    if (criteriaRank.startDate && criteriaRank.endDate) {
+      //start/end dates
 
-      rank += (candidateStartDate.getTime() - projectStartDate.getTime()) / ((criteriaRank.endDate.getTime() - projectStartDate.getTime()) * rankFactor);
+      var projectStartDate = new Date(Date.parse(position.startDate));
+      var candidateStartDate = new Date(Date.parse(candidate.startDate));
+      if (projectStartDate <= criteriaRank.endDate &&
+          candidateStartDate >= criteriaRank.startDate && candidateStartDate <= criteriaRank.endDate) {
+        rank += 1;
+
+        rank += (candidateStartDate.getTime() - projectStartDate.getTime()) / ((criteriaRank.endDate.getTime() - projectStartDate.getTime()) * rankFactor);
+      }
     }
 
-    if (rank > 4) {
+    if (rank > requiredRank) {
       rankedCandidates.push({
         rank: rank,
         rankInfo: rankInfo,
