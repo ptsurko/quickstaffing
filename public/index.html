@@ -9,18 +9,27 @@
 <body ng-app="QuickStaffing" ng-controller="IndexController as ctrl">
   <h1>Quick Staffing tool</h1>
 
-  <div id="positions-container">
-    <div class="position-item" ng-repeat="position in ctrl.positions"
-        ng-click="ctrl.matchCandidates(position, $event, $index)">{{ position.customer }}</div>
+  <div id="filter">
+    <form>
+
+    </form>
   </div>
+  <div id="wiring" style="margin-left: 300px;">
+    <div id="positions-container">
+      <div class="position-item" ng-repeat="position in ctrl.positions"
+          ng-click="ctrl.matchCandidates(position, $event, $index)">{{ position.customer }}</div>
+    </div>
 
-  <div id="canvas-container"></div>
+    <div id="canvas-container"></div>
 
-  <div id="candidates-container">
-    <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
-        ng-click="ctrl.selectCandidate($index)">{{ candidate.fullName }}</div>
+    <div id="candidates-container">
+
+      <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
+          ng-click="ctrl.selectCandidate($index)">
+        <img style="width: 100px; height: 100px;" ng-src="/api/candidates/photo/dbd0e119-4155-43a6-aeda-dcae0f094696" />
+        {{ candidate.fullName }}</div>
+    </div>
   </div>
-
   <script src="js/mathutil.js"></script>
   <script src="js/services/e3sservice.js"></script>
   <script src="js/controllers/indexcontroller.js"></script>

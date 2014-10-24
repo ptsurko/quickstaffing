@@ -18,10 +18,10 @@
 }
 
 .candidate-item {
-  border: solid 1px;
+  border: solid 2px;
   float: left;
   font-size: 14px;
-  height: 100px;
+  height: 160px;
   width: 100px;
 }
 
