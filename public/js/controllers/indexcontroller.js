@@ -24,19 +24,24 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.loadCandidates_();
   this.loadPositions_();
 
-  // this.e3sservice_.getPositionById("3125f78d-0a29-4e80-a1b8-2e5039d5fded")
+  // this.positionservice_.getPosition("64de8762-6634-4176-891e-8a69cdae3a50")
   //   .then(function(data) {
   //     debugger
   //   });
   //
-  // this.e3sservice_.getCandidate("14bcc033-d105-440b-b16e-9c4867878632")
+  // this.candidateservice_.getCandidate("14bcc033-d105-440b-b16e-9c4867878632")
   //   .then(function(data) {
-  //
+  //     debugger
   //   });
 
-  // this.e3sservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {})
+  // this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {primarySkill: 10})
   //   .then(function(data) {
+  //     debugger
+  //   });
   //
+  // this.candidateservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {primarySkill: 10})
+  //   .then(function(data) {
+  //     debugger
   //   });
 };
 

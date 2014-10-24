@@ -6,7 +6,7 @@ var PositionService = function(e3sservice, rankservice, $q) {
 };
 
 PositionService.prototype.getPositions = function(options) {
-  var opt = _.extend({}, options, {start:0, limit: 10});
+  var opt = _.extend({}, {start:0, limit: 10}, options);
   return this.e3sservice_.getPositions()
       .then(function(data) {
         return _.chain(data).rest(opt.start).first(opt.limit).value();
@@ -14,7 +14,7 @@ PositionService.prototype.getPositions = function(options) {
 };
 
 PositionService.prototype.getPosition = function(positionId) {
-  return this.getPositions()
+  return this.e3sservice_.getPositions()
     .then(function(positions) {
       return _.find(positions, function(position) {
         return position.id == positionId;
@@ -22,14 +22,16 @@ PositionService.prototype.getPosition = function(positionId) {
     });
 };
 
-PositionService.prototype.getCandidatesForPosition = function(positionId, criteriaRank) {
+PositionService.prototype.getCandidatesForPosition = function(positionId, criteriaRank, options) {
+  var opt = _.extend({}, {start:0, limit: 10}, options);
   return this.q_.all([
-    this.getPositionById(positionId),
-    this.getCandidates(),
-  ]).then(function(data) {
+    this.getPosition(positionId),
+    this.e3sservice_.getCandidates(),
+  ]).then(_.bind(function(data) {
     var position = data[0];
     var candidates = data[1];
 
-    return this.rankservice_.rankCandidatesToPosition(position, candidates, criteriaRank);
-  });
+    var rankedCandidates = this.rankservice_.rankCandidatesToPosition(position, candidates, criteriaRank);
+    return _.chain(rankedCandidates).rest(opt.start).first(opt.limit).value();
+  }, this));
 };

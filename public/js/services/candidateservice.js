@@ -24,7 +24,7 @@ CandidateService.prototype.getCandidate = function(candidateId) {
 CandidateService.prototype.getPositionsForCandidate = function(candidateId, criteriaRank) {
   return this.q_.all([
     this.getCandidateById(candidateId),
-    this.getPositions()
+    this.getPositions(),
   ]).then(function(data) {
     var candidate = data[0];
     var positions = data[1];
