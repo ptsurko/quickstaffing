@@ -9,10 +9,12 @@ var IndexController = function($scope, positionservice, candidateservice) {
   });
   this.layer_ = new Kinetic.Layer();
 
+  this.projectName = '';
   this.positions = [];
   this.candidates = [];
   this.selectedCandidate_ = 3;
   this.selectedPositionIndex_ = 2;
+
 
   this.rankOptions = {
     location: {
@@ -77,6 +79,8 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.loadCandidates_();
   this.loadPositions_();
 
+
+
   // this.positionservice_.getPosition("64de8762-6634-4176-891e-8a69cdae3a50")
   //   .then(function(data) {
   //     debugger
@@ -103,7 +107,7 @@ IndexController.prototype.loadCandidates_ = function() {
 };
 
 IndexController.prototype.loadPositions_ = function() {
-  this.positionservice_.getPositions().then(this.onPositionsLoaded_.bind(this));
+  this.positionservice_.getPositions({project: this.projectName}).then(this.onPositionsLoaded_.bind(this));
 };
 
 IndexController.prototype.onCandidatesLoaded_ = function(response) {
@@ -169,4 +173,8 @@ IndexController.prototype.getCandidatesForPosition = function(positionId) {
   console.log(locationRankValue);
   this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50",
       {location: locationRankValue}).then(this.onCandidatesLoaded_.bind(this));
+};
+
+IndexController.prototype.changeProjectName = function() {
+  this.loadCandidates_();
 };
