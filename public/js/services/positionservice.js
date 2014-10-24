@@ -5,11 +5,17 @@ var PositionService = function(e3sservice, rankservice, $q) {
   this.q_ = $q;
 };
 
-PositionService.prototype.getPositions = function(options) {
+PositionService.prototype.getPositions = function(query, options) {
   var opt = _.extend({}, {start:0, limit: 10}, options);
   return this.e3sservice_.getPositions()
       .then(function(data) {
-        return _.chain(data).rest(opt.start).first(opt.limit).value();
+        var result = _.chain(data).rest(opt.start).first(opt.limit).value();
+        if (query && query.project) {
+          result = _.filter(result, function(position) {
+            return position.projectName && position.projectName.toLowerCase().indexOf(query.project.toLowerCase()) == 0;
+          });
+        }
+        return result;
       });
 };
 
