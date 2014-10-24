@@ -18,16 +18,19 @@ angular.module('QuickStaffing')
         scope.$watchCollection('ctrl.selectedCandidates', function(selectedCandidates) {
           console.log('candidates selection changed');
           if (!selectedCandidates || !selectedCandidates.length) {
+            element[0].innerHTML = '';
             return;
           }
-          debugger
-          var maxBadges = _.max(selectedCandidates, function(candidate) { return candidate.badge;}) || 1;
-          var maxCertificates = _.max(selectedCandidates, function(candidate) { return candidate.certificates;}) || 1;
+
+          var currentTime = new Date().getTime();
+          var maxStartworkdate = _.chain(selectedCandidates).map(function(candidate) { return currentTime - Date.parse(candidate.startworkdate);}).max().value() || 1;
+          var maxBadges = _.chain(selectedCandidates).map(function(candidate) { return candidate.badges;}).max().value() || 1;
+          var maxCertificates = _.chain(selectedCandidates).map(function(candidate) { return candidate.cartificates;}).max().value() || 1;
 
           var data = selectedCandidates.map(function(candidate) {
             return [
               {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
-              {axis: "StartDate", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
+              {axis: "Time of work in EPAM", value: (currentTime - Date.parse(candidate.startworkdate)) / maxStartworkdate},
               {axis: "Seniority Level", value: candidate.seniorityLevel / 7 },
               {axis: "Badges", value: candidate.badges / maxBadges},
               {axis: "Certificates", value: candidate.certificates / maxCertificates},
@@ -75,8 +78,6 @@ angular.module('QuickStaffing')
           	  .attr("font-size", "11px")
           	  .attr("fill", "#737373")
           	  .text(function(d) { return d; });
-
-
         });
       }
     }
