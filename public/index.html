@@ -83,7 +83,6 @@
           <div>{{ position.position }}</div>
         </div>
       </div>
-x
       <div id="canvas-container"></div>
         <div id="candidates-container">
           <div class="candidate-item" ng-class="{selected: ctrl.isCandidateSelected(candidate)}"
@@ -98,7 +97,7 @@ x
     </div>
   </div>
   <div ng-show="ctrl.showCompareDialog" class="comparedialog">
-    <button type="button" style="float:right" ng-click="ctrl.showCompareDialog = false">X</button>
+    <div style="cursor:default;float:right;padding:5px" ng-click="ctrl.showCompareDialog = false">X</div>
     <div radar selectedCandidates="ctrl.selectedCandidates"></div>
   </div>
   <script src="js/mathutil.js"></script>

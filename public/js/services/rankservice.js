@@ -92,6 +92,8 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
      return item.rank;
    });
    result.reverse();
+
+   console.log(result);
    return result;
 };
 
