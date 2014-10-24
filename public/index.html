@@ -95,9 +95,9 @@
                 <img style="width: 105px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
                 <div><b>{{ candidate.fullName }}</b></div>
               </div>
-              <button type="button" ng-click="ctrl.showCompareDialog = true; return;">Compare</button>
           </div>
       </div>
+      <button type="button" ng-show="ctrl.selectedCandidates.length == 2" style="margin-left: 3px;" ng-click="ctrl.showCompareDialog = true; return;">Compare</button>
     </div>
   </div>
   <div ng-show="ctrl.showCompareDialog" class="comparedialog">
