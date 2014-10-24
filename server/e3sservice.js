@@ -3,7 +3,8 @@ var https = require('https'),
     fs = require('fs'),
     _ = require('underscore'),
     auth = require('./../auth'),
-    cacheService = require('./cacheservice');
+    cacheService = require('./cacheservice'),
+    moment = require('moment');
 
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
@@ -130,7 +131,11 @@ function mapPersons(data) {
       photoId: getCandidatePhotoId(person),
       english: generateEnglishLevel(),
       workload: generateWorkload(),
-      startDate: generateStartDate()
+      startDate: generateStartDate(),
+      startworkdate: moment(person.startworkdate, "YYYY-MM-DD"),
+      certificates: (person.certificatesSum || []).length,
+      badges: (person.badgesSum || []).length,
+      seniorityLevel: Math.floor((Math.random() * 7))
     };
   });
 }

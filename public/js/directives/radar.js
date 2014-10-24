@@ -6,7 +6,7 @@ angular.module('QuickStaffing')
         var w = 300,
             h = 300;
 
-        //Options for the Radar chart, other than default 
+        //Options for the Radar chart, other than default
         var mycfg = {
           w: w,
           h: h,
@@ -17,16 +17,20 @@ angular.module('QuickStaffing')
 
         scope.$watchCollection('ctrl.selectedCandidates', function(selectedCandidates) {
           console.log('candidates selection changed');
-          if (!selectedCandidates.length) {
-            return
+          if (!selectedCandidates || !selectedCandidates.length) {
+            return;
           }
+          debugger
+          var maxBadges = _.max(selectedCandidates, function(candidate) { return candidate.badge;}) || 1;
+          var maxCertificates = _.max(selectedCandidates, function(candidate) { return candidate.certificates;}) || 1;
+
           var data = selectedCandidates.map(function(candidate) {
             return [
               {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
-              {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
-              {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
-              {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
-              {axis: "English", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
+              {axis: "StartDate", value: englishRankMap[candidate.english] / englishRankMap.C2, label: candidate.english},
+              {axis: "Seniority Level", value: candidate.seniorityLevel / 7 },
+              {axis: "Badges", value: candidate.badges / maxBadges},
+              {axis: "Certificates", value: candidate.certificates / maxCertificates},
             ];
           });
 
