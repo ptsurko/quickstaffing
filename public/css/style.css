@@ -172,3 +172,14 @@
 .tt-suggestion p {
   margin: 0;
 }
+
+.comparedialog {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 300px;
+  width: 450px;
+  height: 450px;
+  background: white;
+  border: 1px solid #cdcdcd;
+}
