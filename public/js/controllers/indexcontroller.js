@@ -12,7 +12,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.positions = [];
   this.candidates = [];
   this.selectedPositionIndex_ = -1;
-  this.selectedCandidates_ = [];
+  this.selectedCandidates = [];
 
   this.projectName = '';
   this.rankOptions = {
@@ -82,7 +82,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
 IndexController.prototype.loadCandidates_ = function() {
   this.candidateservice_.getCandidates().then(function(response) {
     this.candidates = response;
-    this.selectedCandidates_ = [];
+    this.selectedCandidates = [];
   }.bind(this));
 };
 
@@ -154,7 +154,7 @@ IndexController.prototype.displayCandidatesForPositions_ = function(response) {
 
   if (candidates.length > 0) {
     this.candidates = candidates;
-    this.selectedCandidates_ = [];
+    this.selectedCandidates = [];
   } else {
     console.log('nothing to update');
     this.layer_.clear();
@@ -185,17 +185,17 @@ IndexController.prototype.onFilterChange = function() {
 };
 
 IndexController.prototype.selectCandidate = function(candidate) {
-  var index = this.selectedCandidates_.indexOf(candidate.id);
+  var index = this.selectedCandidates.indexOf(candidate);
 
   if (index >= 0) {
-    this.selectedCandidates_.splice(index, 1);
+    this.selectedCandidates.splice(index, 1);
   } else {
-    if (this.selectedCandidates_.length < 2) {
-      this.selectedCandidates_.push(candidate.id);
+    if (this.selectedCandidates.length < 2) {
+      this.selectedCandidates.push(candidate);
     }
   }
 };
 
 IndexController.prototype.isCandidateSelected = function(candidate) {
-  return this.selectedCandidates_.indexOf(candidate.id) >= 0;
+  return this.selectedCandidates.indexOf(candidate) >= 0;
 };

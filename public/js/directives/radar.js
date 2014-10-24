@@ -18,10 +18,11 @@ angular.module('QuickStaffing')
         scope.$watchCollection('ctrl.selectedCandidates', function(selectedCandidates) {
           console.log('candidates selection changed');
           if (!selectedCandidates || !selectedCandidates.length) {
-            return
+            return;
           }
-          var maxBadges = _.max(selectedCandidates, function(candidate) { return candidate.badge;});
-          var maxCertificates = _.max(selectedCandidates, function(candidate) { return certificates.badge;});
+          debugger
+          var maxBadges = _.max(selectedCandidates, function(candidate) { return candidate.badge;}) || 1;
+          var maxCertificates = _.max(selectedCandidates, function(candidate) { return candidate.certificates;}) || 1;
 
           var data = selectedCandidates.map(function(candidate) {
             return [
