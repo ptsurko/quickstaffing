@@ -3,8 +3,7 @@ var https = require('https'),
     fs = require('fs'),
     _ = require('underscore'),
     auth = require('./../auth'),
-    cacheService = require('./cacheservice'),
-    moment = require('moment');
+    cacheService = require('./cacheservice');
 
 var PROJECT_ENTITY_TYPE = 'com.epam.e3s.app.project.api.data.ProjectProjectionEntity';
 var EMPLOYEE_ENTITY_TYPE = 'com.epam.e3s.app.people.api.data.EmployeeEntity';
@@ -140,15 +139,11 @@ function mapPositions(data) {
       primarySkill: position.primaryskill,
       city: position.city,
       country: position.country,
-      region: position.region,
       projectName: position.project,
       position: position.position,
       customer: position.customer,
       customerId: position.customerIdSum,
-      id: position.id,
-      billingType: position.billingTypeSum,
-      relocationSupported: (position.relocationSupportedSum == "Yes"),
-      startDate: moment(position.startdate, "DD-MM-YYYY")
+      id: position.id
     };
   });
 }

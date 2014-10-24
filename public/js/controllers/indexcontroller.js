@@ -1,5 +1,7 @@
-var IndexController = function(e3sservice) {
+var IndexController = function(e3sservice, positionservice, candidateservice) {
   this.e3sservice_ = e3sservice;
+  this.positionservice_ = positionservice;
+  this.candidateservice_ = candidateservice;
 
   this.stage_ = new Kinetic.Stage({
     container: 'canvas-container',
@@ -14,14 +16,29 @@ var IndexController = function(e3sservice) {
 
   this.loadCandidates_();
   this.loadPositions_();
+
+  // this.e3sservice_.getPositionById("3125f78d-0a29-4e80-a1b8-2e5039d5fded")
+  //   .then(function(data) {
+  //     debugger
+  //   });
+  //
+  // this.e3sservice_.getCandidate("14bcc033-d105-440b-b16e-9c4867878632")
+  //   .then(function(data) {
+  //
+  //   });
+
+  // this.e3sservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {})
+  //   .then(function(data) {
+  //
+  //   });
 };
 
 IndexController.prototype.loadCandidates_ = function() {
-  this.e3sservice_.getCandidates().then(this.onCandidatesLoaded_.bind(this));
+  this.candidateservice_.getCandidates().then(this.onCandidatesLoaded_.bind(this));
 };
 
 IndexController.prototype.loadPositions_ = function() {
-  this.e3sservice_.getPosition().then(this.onPositionsLoaded_.bind(this));
+  this.positionservice_.getPositions().then(this.onPositionsLoaded_.bind(this));
 };
 
 IndexController.prototype.onCandidatesLoaded_ = function(response) {

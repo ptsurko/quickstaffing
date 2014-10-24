@@ -19,7 +19,8 @@ gulp.task('scripts', function() {
   gulp.src([
       './bower_components/angular/angular.js',
       './bower_components/d3/d3.js',
-      './bower_components/sprintf/dist/sprintf.min.js'])
+      './bower_components/sprintf/dist/sprintf.min.js',
+      './bower_components/underscore/underscore.js'])
     .pipe(concat('libs.js'))
     .pipe(gulp.dest('./public/dist/'));
 });
