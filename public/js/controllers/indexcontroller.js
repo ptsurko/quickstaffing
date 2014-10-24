@@ -1,5 +1,4 @@
-var IndexController = function(e3sservice, positionservice, candidateservice) {
-  this.e3sservice_ = e3sservice;
+var IndexController = function(positionservice, candidateservice) {
   this.positionservice_ = positionservice;
   this.candidateservice_ = candidateservice;
 
