@@ -18,6 +18,24 @@ var rankingCriteria = {
 };
 var app = express();
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  var send = res.send;
+  res.send = function (string) {
+    var body = string instanceof Buffer ? string.toString() : string;
+    if ((req.query.pretty || '').toLowerCase() == 'true') {
+      try {
+        var responseJson = JSON.parse(body);
+        body = JSON.stringify(responseJson, null, 2);
+      } catch (e) {
+        console.log('unable to prettify response. leave as is');
+      }
+    }
+    return send.call(this, body);
+  };
+
+  next();
+});
+
 app.use('/api/positions/:id/candidates', function(req, res) {
   var positionId = req.params.id;
   var query = _.extend({}, rankingCriteria, req.query);

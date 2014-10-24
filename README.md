@@ -18,6 +18,8 @@
    9. /api/candidates/a1a3bc1e-1d18-4401-92f8-d2f22e8d7527
   10. /api/candidates/a1a3bc1e-1d18-4401-92f8-d2f22e8d7527/positions?primarySkill=10&city=5
   11. /api/candidates/photo/dbd0e119-4155-43a6-aeda-dcae0f094696
+
+  12. adding parameter ?pretty=true to all api requests makes returned JSON mode readable.
 7. Ranking parameters 0..10:
   1. primarySkill
   2. city

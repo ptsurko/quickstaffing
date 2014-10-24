@@ -21,6 +21,7 @@ var positions = [];
 
 
 function getItems(auth, type, statements, start, limit, callback) {
+  console.log('loading \'' + type + '\' data from E3S.');
   var queryParameters = {
     type: type || 'com.epam.e3s.app.people.api.data.EmployeeEntity',
     query: JSON.stringify({
@@ -41,6 +42,7 @@ function getItems(auth, type, statements, start, limit, callback) {
       data += chunk;
     });
     res.on('end', function() {
+      console.log('\'' + type + '\' data has been successfully loaded.');
       callback(JSON.parse(data));
     });
   }).on('error', function(e) {
