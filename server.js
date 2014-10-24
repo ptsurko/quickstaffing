@@ -39,8 +39,8 @@ app.use(function(req, res, next) {
 app.use('/api/positions/:id/candidates', function(req, res) {
   var positionId = req.params.id;
   var query = extractRankingCriteria(req.query);
-  var limit = parseInt(req.query.limit) || 10;
-  var start = parseInt(req.query.start) || 0;
+  var limit = parseInt(req.query.limit, 10) || 10;
+  var start = parseInt(req.query.start, 10) || 0;
   console.log('retrieving best candidates for position \'' + positionId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
   positionservice.getCandidatesForPosition(positionId, query, function(data) {
@@ -59,9 +59,12 @@ app.use('/api/positions/:id', function(req, res) {
 app.use('/api/positions', function(req, res) {
   console.log('retrieving positions.');
 
+  var limit = parseInt(req.query.limit, 10) || 10;
+  var start = parseInt(req.query.start, 10) || 0;
+
   var project = req.query.project;
   positionservice.getPositions({project: project}, function(data) {
-    res.json(data);
+    res.json(_.chain(data).rest(start).first(limit).value());
   });
 });
 
@@ -82,8 +85,8 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
 app.use('/api/candidates/:id/positions', function(req, res) {
   var candidateId = req.params.id;
   var query = extractRankingCriteria(req.query);
-  var limit = parseInt(req.query.limit) || 10;
-  var start = parseInt(req.query.start) || 0;
+  var limit = parseInt(req.query.limit, 10) || 10;
+  var start = parseInt(req.query.start, 10) || 0;
   console.log('retrieving candidate \'' + candidateId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
   candidateservice.getPositionsForCandidate(candidateId, query, function(data) {
@@ -104,8 +107,11 @@ app.use('/api/candidates', function(req, res) {
   console.log('retrieving candidates.');
 
   var candidateName = req.query.name;
+  var limit = parseInt(req.query.limit, 10) || 10;
+  var start = parseInt(req.query.start, 10) || 0;
+
   candidateservice.getCandidates({name: candidateName}, function(data) {
-    res.json(data);
+    res.json(_.chain(data).rest(start).first(limit).value());
   });
 });
 
@@ -160,7 +166,7 @@ fs.exists('.credentials', function(exists) {
 function extractRankingCriteria(query) {
   var filteredQuery =_.pick(_.extend({}, rankingCriteria, query), 'primarySkill', 'country', 'city', 'position');
   _.forEach(_.keys(filteredQuery), function(key) {
-    filteredQuery[key] = parseInt(filteredQuery[key], 0);
+    filteredQuery[key] = parseInt(filteredQuery[key], 10);
   });
   return filteredQuery;
 }
