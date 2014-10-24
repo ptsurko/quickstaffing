@@ -59,7 +59,7 @@ app.use('/api/positions/:id', function(req, res) {
 app.use('/api/positions', function(req, res) {
   console.log('retrieving positions.');
 
-  var limit = parseInt(req.query.limit, 10) || 10;
+  var limit = parseInt(req.query.limit, 10) || 1000;
   var start = parseInt(req.query.start, 10) || 0;
 
   var project = req.query.project;
@@ -107,7 +107,7 @@ app.use('/api/candidates', function(req, res) {
   console.log('retrieving candidates.');
 
   var candidateName = req.query.name;
-  var limit = parseInt(req.query.limit, 10) || 10;
+  var limit = parseInt(req.query.limit, 10) || 10000;
   var start = parseInt(req.query.start, 10) || 0;
 
   candidateservice.getCandidates({name: candidateName}, function(data) {
