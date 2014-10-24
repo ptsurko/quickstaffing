@@ -135,7 +135,8 @@ function mapPersons(data) {
       startworkdate: moment(person.startworkdate, "YYYY-MM-DD"),
       certificates: (person.certificatesSum || []).length,
       badges: (person.badgesSum || []).length,
-      seniorityLevel: Math.floor((Math.random() * 7))
+      seniorityLevel: Math.floor((Math.random() * 7)),
+      webinars: Math.floor((Math.random() * 20))
     };
   });
 }

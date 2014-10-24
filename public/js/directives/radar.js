@@ -26,6 +26,8 @@ angular.module('QuickStaffing')
           var maxStartworkdate = _.chain(selectedCandidates).map(function(candidate) { return currentTime - Date.parse(candidate.startworkdate);}).max().value() || 1;
           var maxBadges = _.chain(selectedCandidates).map(function(candidate) { return candidate.badges;}).max().value() || 1;
           var maxCertificates = _.chain(selectedCandidates).map(function(candidate) { return candidate.cartificates;}).max().value() || 1;
+          var maxWebinars = _.chain(selectedCandidates).map(function(candidate) { return candidate.webinar;}).max().value() || 1;
+          var maxSkills = _.chain(selectedCandidates).map(getSkillCount).max().value() || 1;
 
           var data = selectedCandidates.map(function(candidate) {
             return [
@@ -34,8 +36,17 @@ angular.module('QuickStaffing')
               {axis: "Seniority Level", value: candidate.seniorityLevel / 7 },
               {axis: "Badges", value: candidate.badges / maxBadges},
               {axis: "Certificates", value: candidate.certificates / maxCertificates},
+              {axis: "SEC/Webinars", value: (candidate.webinar || 0) / maxWebinars},
+              {axis: "Skills", value: getSkillCount(candidate) / maxSkills}
             ];
           });
+
+          function getSkillCount(candidate) {
+            if (candidate.skills) {
+              return candidate.skills.advanced.length + candidate.skills.expert.length + candidate.skills.intermediate.length + candidate.skills.novice.length
+            }
+            return 0;
+          }
 
           RadarChart.draw(element[0], data, mycfg);
 

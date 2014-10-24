@@ -77,6 +77,58 @@ var IndexController = function($scope, positionservice, candidateservice) {
 
   this.loadCandidates_();
   this.loadPositions_();
+
+
+// debugger
+//       // instantiate the bloodhound suggestion engine
+//       var projects = new Bloodhound({
+//         datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.project); },
+//         queryTokenizer: Bloodhound.tokenizers.whitespace,
+//         local: projects
+//       });
+//
+//       // initialize the bloodhound suggestion engine
+//       projects.initialize();
+//
+//       this.projectsDataset.source = projects.ttAdapter();
+//     }, this));
+
+  // this.projectsDataset = {
+  //   displayKey: 'project',
+  //   source: new Bloodhound({
+  //     datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.project); },
+  //     queryTokenizer: Bloodhound.tokenizers.whitespace,
+  //     remote : {
+  //       url : '%QUERY',
+  //       transport : function(url, options, onSuccess, onError) {
+  //           var deferred = $.Deferred();
+  //
+  //           positionservice.getPositions({}, {limit: 99999})
+  //             .then(_.bind(function(positions) {
+  //               debugger
+  //               var projects = _.chain(positions).filter(function(pos) { return pos.projectName;}).map(function(pos) { return {project: pos.projectName};}).uniq(true).value();
+  //               projects.sort();
+  //
+  //               deferred.resolveWith( projects );
+  //             }));
+  //
+  //
+  //
+  //           return deferred.promise();
+  //       }
+  //
+  //   }
+  //   })
+  // };
+  // // Typeahead options object
+  // this.exampleOptions = {
+  //   highlight: true
+  // };
+  //
+  // this.exampleOptionsNonEditable = {
+  //   highlight: true,
+  //   editable: false // the new feature
+  // };
 };
 
 IndexController.prototype.loadCandidates_ = function() {
@@ -169,12 +221,13 @@ IndexController.prototype.displayCandidatesForPositions_ = function(response) {
 
   this.layer_.clear();
   this.layer_.destroyChildren();
-
+  var ranks = _.chain(response).map(function(item) { return item.rank;}).uniq().value();
   response.forEach(function(item, index) {
     var elementWidth = 189;
     var x2 = (index * (elementWidth + 2) + elementWidth / 2);
     var x1 = (this.selectedPositionIndex_ * (elementWidth + 2) + elementWidth / 2);
-    this.drawLine_(x1, x2, item.rank / 5);
+    var thickness = ranks.length - ranks.indexOf(item.rank) || 0;
+    this.drawLine_(x1, x2, thickness / 2);
   }, this);
 };
 
