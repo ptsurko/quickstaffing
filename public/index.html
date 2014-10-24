@@ -55,8 +55,8 @@
         </div>
       </form>
     </div>
-    <input type="text" ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()"
-           class="form-control" placeholder="Text input">
+    <input class="form-control" type="text" placeholder="Project name"
+        ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()" />
     <div id="wiring">
       <div id="positions-container">
         <div class="position-item" ng-class="{selected: ctrl.selectedPositionIndex_ == $index}"

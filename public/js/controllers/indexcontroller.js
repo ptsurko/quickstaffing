@@ -5,7 +5,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.stage_ = new Kinetic.Stage({
     container: 'canvas-container',
     width: 1350,
-    height: 200
+    height: 100
   });
   this.layer_ = new Kinetic.Layer();
 
@@ -105,7 +105,7 @@ IndexController.prototype.matchCandidates = function(position, $event, $index) {
 
 IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
   var y1 = 0;
-  var y2 = 200;
+  var y2 = 100;
   var a = (y2 - y1) / (x2 - x1);
   var b = y2 - a * x2;
   var points = [x1, y1, x2, y2];
