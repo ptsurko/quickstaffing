@@ -41,11 +41,11 @@ var IndexController = function($scope, positionservice, candidateservice) {
     },
     workLoad: {
       from: 1,
-      to: 4,
+      to: 5,
       step: 1,
       smooth: false,
-      dimension: " km",
-      scale: ['city', 'region', 'country', 'ww']
+      dimension: "",
+      scale: [0, 0.25, 0.5, 0.75, 1]
     },
     seniority: {
       from: 1,
@@ -66,10 +66,10 @@ var IndexController = function($scope, positionservice, candidateservice) {
   };
 
   this.rankValues = {
-    location: 1,
+    location: 3,
     primarySkill: 30,
     startDate: 3,
-    workLoad: 4,
+    workLoad: 3,
     seniority: 2,
     englishLevel: 4
   };
@@ -87,10 +87,10 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //     debugger
   //   });
 
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
-    .then(function(data) {
-      console.log(data);
-    });
+//  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
+//    .then(function(data) {
+//      console.log(data);
+//    });
   //
   // this.candidateservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {primarySkill: 10})
   //   .then(function(data) {
@@ -99,7 +99,9 @@ var IndexController = function($scope, positionservice, candidateservice) {
 };
 
 IndexController.prototype.loadCandidates_ = function() {
-  this.candidateservice_.getCandidates().then(this.onCandidatesLoaded_.bind(this));
+  this.candidateservice_.getCandidates().then(function(response) {
+    this.candidates = response;
+  }.bind(this));
 };
 
 IndexController.prototype.loadPositions_ = function() {
@@ -107,24 +109,24 @@ IndexController.prototype.loadPositions_ = function() {
 };
 
 IndexController.prototype.onCandidatesLoaded_ = function(response) {
-  this.candidates = response;
+//  this.candidates = response;
   console.log(response);
 };
 
 IndexController.prototype.onPositionsLoaded_ = function(response) {
   this.positions = response;
-  console.log(response);
+//  console.log(response);
 };
 
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
   this.selectedPositionIndex_ = $index;
 
-  var elementWidth = $event.currentTarget.clientWidth;
-  var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
-  var x1 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
+//  var elementWidth = $event.currentTarget.clientWidth;
+//  var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
+//  var x1 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
+//  this.drawLine_(x1, x2);
 
   this.getCandidatesForPosition(position.id);
-  this.drawLine_(x1, x2);
 };
 
 IndexController.prototype.selectCandidate = function($index) {
@@ -148,7 +150,7 @@ IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
   var blueSpline = new Kinetic.Line({
     points: points,
     stroke: 'black',
-    strokeWidth: MathUtil.getRandom(0.1, 3),
+    strokeWidth: thikness,
     lineCap: 'round',
     tension: 0.5
   });
@@ -166,7 +168,32 @@ IndexController.prototype.calcX_ = function(a, b, y) {
 
 IndexController.prototype.getCandidatesForPosition = function(positionId) {
   var locationRankValue = this.rankOptions.location.scale[this.rankValues.location - 1];
-  console.log(locationRankValue);
+  var englishLevelValue = this.rankOptions.englishLevel.scale[this.rankValues.englishLevel - 1];
+  var workloadValue = this.rankOptions.workLoad.scale[this.rankValues.workLoad - 1];
+  var startDate = new Date(2014, 5, 10);
+  var endDate = new Date(2015, 0, 1);
+
   this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50",
-      {location: locationRankValue}).then(this.onCandidatesLoaded_.bind(this));
+      {location: locationRankValue, english: englishLevelValue, workload: workloadValue, startDate: startDate,
+          endDate: endDate}).then(function(response) {
+            var candidates = response.map(function(item) {
+              return item.candidate;
+            });
+
+            if (candidates.length > 0) {
+              this.candidates = candidates;
+            } else {
+              console.log('nothing to update');
+              return;
+            }
+
+            debugger;
+
+            response.forEach(function(item, index) {
+              var elementWidth = 100;
+              var x2 = (index * (elementWidth + 2) + elementWidth / 2);
+              var x1 = (this.selectedPositionIndex_ * (elementWidth + 2) + elementWidth / 2);
+              this.drawLine_(x1, x2, item.rank / 5);
+            }, this);
+      }.bind(this));
 };
