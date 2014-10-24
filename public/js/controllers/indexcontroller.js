@@ -34,7 +34,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //     debugger
   //   });
 
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location:'city'})
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2'})
     .then(function(data) {
       console.log(data);
     });

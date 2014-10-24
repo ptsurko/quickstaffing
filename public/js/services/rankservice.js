@@ -35,14 +35,18 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
     _.forEach(keys, function(key) {
       if (key == "location") {
         for(var i = 0; i < locationRanks.length; i++) {
-          if (locationRanks[i].match(position, candidate)) {
-            rank += 1 + locationRankMap[locationRanks[i].location] / locationRankMap.city;
+          if (locationRankMap[criteriaRank.location] > locationRankMap[locationRanks[i].location]) {
             break;
           }
-          //if (locationRankMap[locationRanks[i].location] == )
+          if (locationRanks[i].match(position, candidate)) {
+            rank += 1 + locationRankMap[locationRanks[i].location] / (locationRankMap.city * 2);
+            break;
+          }
         }
       } else if (key == "english") {
-
+        if (candidate.english > criteriaRank.english) {
+          rank += 1 + englishRankMap[candidate.english] / (englishRankMap.C2 * 2);
+        }
       } else if (position[key] && candidate[key]) {
         if (position[key] == candidate[key]) {
           rank += criteriaRank[key];
@@ -64,11 +68,6 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
      return item.rank;
    });
    result.reverse();
-  //  if (result && result.length && result[0].rank > 0) {
-  //    result = _.filter(result, function(item) {
-  //      return item.rank > 0;
-  //    });
-  //  }
    return result;
 };
 
