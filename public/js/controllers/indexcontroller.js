@@ -2,7 +2,7 @@ var IndexController = function(e3sservice) {
   this.e3sservice_ = e3sservice;
 
   this.stage_ = new Kinetic.Stage({
-    container: 'container',
+    container: 'canvas-container',
     width: 1012,
     height: 360
   });

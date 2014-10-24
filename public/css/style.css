@@ -1,0 +1,30 @@
+#positions-container {
+  height: 102px;
+  padding-left: 100px;
+}
+
+#candidates-container {
+  height: 102px;
+  margin-top: -15px;
+  padding-left: 100px;
+}
+
+.position-item {
+  border: solid 1px;
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+}
+
+.candidate-item {
+  border: solid 1px;
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+}
+
+#canvas-container {
+  border: solid 0px;
+  margin-left: 100px;
+  width: 1012px;
+}
