@@ -10,6 +10,8 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="js/libs/angular.js"></script>
   <script src="js/libs/angular-sanitize.js"></script>
+  <script src="js/libs/typehead.js"></script>
+  <script src="js/libs/angular-typehead.min.js"></script>
   <script src="js/libs/kinetic-v5.1.0.js"></script>
   <script src="js/libs/d3.min.js"></script>
   <script src="js/libs/d3transform.js"></script>
@@ -56,7 +58,7 @@
       </form>
     </div>
     <input class="form-control" type="text" placeholder="Project name"
-        ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()" />
+        ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()"/>
     <div id="wiring">
       <div id="positions-container">
         <div class="position-item" ng-class="{selected: ctrl.selectedPositionIndex_ == $index}"

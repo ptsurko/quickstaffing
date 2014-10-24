@@ -54,6 +54,10 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
       rank += 1 + englishRankMap[candidate.english] / (englishRankMap.C2 * rankFactor);
     }
 
+    // if (candidate.primarySkill == position.primarySkill) {
+    //   rank += 1;
+    // }
+
     //workload
     rank += candidate.workload > criteriaRank.workload ? 1 : 0;
 
