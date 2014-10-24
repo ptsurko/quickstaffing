@@ -6,7 +6,9 @@ function rankCandidatesToPosition(position, candidates, criteriaRank) {
     var rank = 0;
     var rankInfo = {};
     _.forEach(keys, function(key) {
-      if (position[key] == candidate[key]) {
+      if ((position[key] && candidate[key]) &&
+          (( _.isString(position[key]) && _.isArray(candidate[key]) && _.indexOf(candidate[key], position[key]) >= 0) ||
+           (position[key] == candidate[key]))) {
         rank += criteriaRank[key];
         rankInfo[key] = criteriaRank[key];
       }
@@ -14,7 +16,8 @@ function rankCandidatesToPosition(position, candidates, criteriaRank) {
     return {
       rank: rank,
       rankInfo: rankInfo,
-      candidate: candidate
+      candidate: candidate,
+      position: position
     };
   });
 

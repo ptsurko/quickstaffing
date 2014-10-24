@@ -39,9 +39,11 @@ app.use(function(req, res, next) {
 app.use('/api/positions/:id/candidates', function(req, res) {
   var positionId = req.params.id;
   var query = extractRankingCriteria(req.query);
+  var limit = parseInt(req.query.limit) || 10;
+  var start = parseInt(req.query.start) || 0;
   console.log('retrieving best candidates for position \'' + positionId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
-  positionservice.getCandidatesForPosition(positionId, query, function(data) {
+  positionservice.getCandidatesForPosition(positionId, query, start, limit, function(data) {
     res.json(data);
   });
 });
@@ -78,9 +80,11 @@ app.use('/api/candidates/photo/:photoId', function(req, res) {
 app.use('/api/candidates/:id/positions', function(req, res) {
   var candidateId = req.params.id;
   var query = extractRankingCriteria(req.query);
+  var limit = parseInt(req.query.limit) || 10;
+  var start = parseInt(req.query.start) || 0;
   console.log('retrieving candidate \'' + candidateId + '\' with criteria + \'' + JSON.stringify(query) + '\'.');
 
-  candidateservice.getPositionsForCandidate(candidateId, query, function(data) {
+  candidateservice.getPositionsForCandidate(candidateId, query, start, limit, function(data) {
     res.json(data);
   });
 });

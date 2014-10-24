@@ -27,7 +27,7 @@ function getPositionById(positionId, callback) {
 };
 
 
-function getCandidatesForPosition(positionId, criteriaRank, callback) {
+function getCandidatesForPosition(positionId, criteriaRank, start, limit, callback) {
   async.parallel([
     function(callback) {
       getPositionById(positionId, function(position) {
@@ -44,7 +44,7 @@ function getCandidatesForPosition(positionId, criteriaRank, callback) {
     var candidates = results[1];
 
     var rankedCandidates = rankservice.rankCandidatesToPosition(position, candidates, criteriaRank);
-    callback(_.first(rankedCandidates, 10));
+    callback(_.chain(rankedCandidates).rest(start).first(limit).value());
   })
 };
 

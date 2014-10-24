@@ -25,7 +25,7 @@ function getCandidateById(candidateId, callback) {
   });
 };
 
-function getPositionsForCandidate(candidateId, criteriaRank, callback) {
+function getPositionsForCandidate(candidateId, criteriaRank, start, limit, callback) {
   async.parallel([
     function(callback) {
       getCandidateById(candidateId, function(candidate) {
@@ -42,7 +42,7 @@ function getPositionsForCandidate(candidateId, criteriaRank, callback) {
     var positions = results[1];
 
     var rankedCandidates = rankservice.rankCandidatesToPosition(candidate, positions, criteriaRank);
-    callback(_.first(rankedCandidates, 10));
+    callback(_.chain(rankedCandidates).rest(start).first(limit).value());
   })
 };
 

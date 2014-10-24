@@ -27,7 +27,7 @@ function getItems(auth, type, statements, start, limit, callback) {
     query: JSON.stringify({
       statements: statements || [{'query': '*'}],
       start: start || 0,
-      limit: limit || 10 //5000
+      limit: limit || 1000 //5000
     })
   };
 
@@ -120,10 +120,10 @@ function mapPersons(data) {
       id: person.id,
       title: getFirstItemIfArray(person.title),
       skills: {
-        expert: (person.skill.expert || '').split(", "),
-        advanced: (person.skill.advanced || '').split(", "),
-        intermediate: (person.skill.intermediate || '').split(", "),
-        novice: (person.skill.novice || '').split(", ")
+        expert: getCandidateSkills(person, 'expert'),
+        advanced: getCandidateSkills(person, 'advanced'),
+        intermediate: getCandidateSkills(person, 'intermediate'),
+        novice: getCandidateSkills(person, 'novice')
       },
       positions: getCandidateTakenPositions(person),
       projects: getCandidateProjects(person),
@@ -159,6 +159,13 @@ function mapProjects(data) {
       customerId: project.customerIdSum
     };
   });
+}
+
+function getCandidateSkills(person, skillLevel) {
+  if (person.skill && person.skill[skillLevel]) {
+    return (person.skill[skillLevel] || '').split(", ")
+  }
+  return [];
 }
 
 function getCandidateTakenPositions(person) {
