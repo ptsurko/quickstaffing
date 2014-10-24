@@ -6,7 +6,7 @@ angular.module('QuickStaffing')
         var w = 300,
             h = 300;
 
-        //Options for the Radar chart, other than default
+        //Options for the Radar chart, other than default 
         var mycfg = {
           w: w,
           h: h,
