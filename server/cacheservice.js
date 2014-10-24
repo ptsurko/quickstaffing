@@ -1,4 +1,4 @@
-var fs = require('fs')
+var fs = require('fs'),
     async = require('async');
 
 var CANDIDATES_CACHE_FILE_NAME = 'cache/candidates.json';
