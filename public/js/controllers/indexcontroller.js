@@ -4,15 +4,14 @@ var IndexController = function($scope, positionservice, candidateservice) {
 
   this.stage_ = new Kinetic.Stage({
     container: 'canvas-container',
-    width: 1020,
-    height: 300
+    width: 1350,
+    height: 200
   });
   this.layer_ = new Kinetic.Layer();
 
   this.positions = [];
   this.candidates = [];
-  this.selectedCandidate_ = 3;
-  this.selectedPositionIndex_ = 2;
+  this.selectedPositionIndex_ = -1;
 
   this.projectName = '';
   this.rankOptions = {
@@ -110,23 +109,15 @@ IndexController.prototype.loadPositions_ = function() {
 };
 
 IndexController.prototype.onCandidatesLoaded_ = function(response) {
-//  this.candidates = response;
   console.log(response);
 };
 
 IndexController.prototype.onPositionsLoaded_ = function(response) {
   this.positions = response;
-//  console.log(response);
 };
 
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
   this.selectedPositionIndex_ = $index;
-
-//  var elementWidth = $event.currentTarget.clientWidth;
-//  var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
-//  var x1 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
-//  this.drawLine_(x1, x2);
-
   this.getCandidatesForPosition(position.id);
 };
 
@@ -136,21 +127,14 @@ IndexController.prototype.selectCandidate = function($index) {
 
 IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
   var y1 = 0;
-  var y2 = 300;
+  var y2 = 200;
   var a = (y2 - y1) / (x2 - x1);
   var b = y2 - a * x2;
-  var points = [x1, y1];
-  var point = this.calcX_(a, b, MathUtil.getRandomInt(60, 100)) - MathUtil.getRandomInt(80, 160);
-
-  points.push(point);
-  points.push(MathUtil.getRandomInt(120, 160));
-  points.push(this.calcX_(a, b, MathUtil.getRandomInt(180, 220)) + MathUtil.getRandomInt(80, 160));
-  points.push(MathUtil.getRandomInt(180, 220));
-  points.push(x2); points.push(y2);
+  var points = [x1, y1, x2, y2];
 
   var blueSpline = new Kinetic.Line({
     points: points,
-    stroke: 'black',
+    stroke: '#949494',
     strokeWidth: thikness,
     lineCap: 'round',
     tension: 0.5
@@ -174,31 +158,48 @@ IndexController.prototype.getCandidatesForPosition = function(positionId) {
   var startDate = new Date(2014, 5, 10);
   var endDate = new Date(2015, 0, 1);
 
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50",
-      {location: locationRankValue, english: englishLevelValue, workload: workloadValue, startDate: startDate,
-          endDate: endDate}).then(function(response) {
-            var candidates = response.map(function(item) {
-              return item.candidate;
-            });
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {
+    location: locationRankValue,
+    english: englishLevelValue,
+    workload: workloadValue,
+    startDate: startDate,
+    endDate: endDate
+  }).then(this.displayCandidatesForPositions_.bind(this));
+};
 
-            if (candidates.length > 0) {
-              this.candidates = candidates;
-            } else {
-              console.log('nothing to update');
-              return;
-            }
+IndexController.prototype.displayCandidatesForPositions_ = function(response) {
+  var candidates = response.map(function(item) {
+    return item.candidate;
+  });
 
-            debugger;
+  if (candidates.length > 0) {
+    this.candidates = candidates;
+  } else {
+    console.log('nothing to update');
+    this.layer_.clear();
+    this.layer_.destroyChildren();
+    alert('No matches!');
+    return;
+  }
 
-            response.forEach(function(item, index) {
-              var elementWidth = 100;
-              var x2 = (index * (elementWidth + 2) + elementWidth / 2);
-              var x1 = (this.selectedPositionIndex_ * (elementWidth + 2) + elementWidth / 2);
-              this.drawLine_(x1, x2, item.rank / 5);
-            }, this);
-      }.bind(this));
+  this.layer_.clear();
+  this.layer_.destroyChildren();
+
+  response.forEach(function(item, index) {
+    var elementWidth = 189;
+    var x2 = (index * (elementWidth + 2) + elementWidth / 2);
+    var x1 = (this.selectedPositionIndex_ * (elementWidth + 2) + elementWidth / 2);
+    this.drawLine_(x1, x2, item.rank / 5);
+  }, this);
 };
 
 IndexController.prototype.changeProjectName = function() {
   this.loadPositions_();
+};
+
+
+IndexController.prototype.onFilterChange = function() {
+  if (this.selectedPositionIndex_ > 0) {
+    this.getCandidatesForPosition(this.selectedPositionIndex_);
+  }
 };

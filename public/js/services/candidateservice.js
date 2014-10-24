@@ -5,7 +5,7 @@ var CandidateService = function(e3sservice, $q) {
 };
 
 CandidateService.prototype.getCandidates = function(options) {
-  var opt = _.extend({}, options, {start:0, limit: 10});
+  var opt = _.extend({}, options, {start:0, limit: 7});
   return this.e3sservice_.getCandidates()
     .then(function(data) {
       return _.chain(data).rest(opt.start).first(opt.limit).value();

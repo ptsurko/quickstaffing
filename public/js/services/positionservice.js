@@ -6,7 +6,7 @@ var PositionService = function(e3sservice, rankservice, $q) {
 };
 
 PositionService.prototype.getPositions = function(query, options) {
-  var opt = _.extend({}, {start:0, limit: 10}, options);
+  var opt = _.extend({}, {start:0, limit: 7}, options);
   return this.e3sservice_.getPositions()
       .then(function(data) {
         var result = data;
@@ -29,7 +29,7 @@ PositionService.prototype.getPosition = function(positionId) {
 };
 
 PositionService.prototype.getCandidatesForPosition = function(positionId, criteriaRank, options) {
-  var opt = _.extend({}, {start:0, limit: 10}, options);
+  var opt = _.extend({}, {start:0, limit: 7}, options);
   var criteria = _.extend({}, {workload: 0, english: 'A1', location: 'ww'}, criteriaRank);
   console.log(criteria);
   return this.q_.all([

@@ -9,7 +9,7 @@
 
   <script src="js/libs/angular.js"></script>
   <script src="js/libs/angular-sanitize.js"></script>
-  <script src="js/libs/kinetic.min.js"></script>
+  <script src="js/libs/kinetic-v5.1.0.js"></script>
   <script src="js/libs/underscore-min.js"></script>
   <script src="ng-slider.min.js"></script>
 </head>
@@ -21,7 +21,7 @@
       <form>
         <div class="filter-item">
           <span class="label">Location</span>
-          <input id="locationSlider" type="text"
+          <input id="locationSlider" type="text" ng-change="ctrl.onFilterChange()"
               ng-model="ctrl.rankValues.location" slider options="ctrl.rankOptions.location" />
         </div>
         <div class="filter-item">
@@ -36,7 +36,7 @@
         </div>
         <div class="filter-item">
           <span class="label">Work load</span>
-          <input type="text" id="workLoadSlider"
+          <input type="text" id="workLoadSlider" ng-change="ctrl.onFilterChange()"
               ng-model="ctrl.rankValues.workLoad" slider options="ctrl.rankOptions.workLoad" />
         </div>
         <div class="filter-item">
@@ -46,7 +46,7 @@
         </div>
         <div class="filter-item">
           <span class="label">English level</span>
-          <input type="text" id="englishLevelSlider"
+          <input type="text" id="englishLevelSlider" ng-change="ctrl.onFilterChange()"
               ng-model="ctrl.rankValues.englishLevel" slider options="ctrl.rankOptions.englishLevel" />
         </div>
       </form>
@@ -54,19 +54,22 @@
     <input type="text" ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()" class="form-control" placeholder="Text input">
     <div id="wiring">
       <div id="positions-container">
-        <div class="position-item" ng-repeat="position in ctrl.positions"
+        <div class="position-item" ng-class="{selected: ctrl.selectedPositionIndex_ == $index}"
+            ng-repeat="position in ctrl.positions"
             ng-click="ctrl.matchCandidates(position, $event, $index)">
-          <img style="width: 100px; height: 60px;" src="img/position-logo.png" />
-          {{ position.customer }}</div>
+          <img style="width: 100px; height: 50px;" src="img/position-logo.png" />
+          <div><b style="font-size: 18px;">{{ position.customer }}</b></div>
+          <div>{{ position.position }}</div>
+        </div>
       </div>
 
       <div id="canvas-container"></div>
-      <div id="candidates-container">
-
-      <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
-          ng-click="ctrl.selectCandidate($index)">
-        <img style="width: 100px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
-        {{ candidate.fullName }}</div>
+        <div id="candidates-container">
+          <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
+              ng-click="ctrl.selectCandidate($index)">
+            <img style="width: 105px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
+            <div><b>{{ candidate.fullName }}</b></div>
+          </div>
       </div>
     </div>
   </div>
