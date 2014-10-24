@@ -132,14 +132,18 @@ IndexController.prototype.calcX_ = function(a, b, y) {
 };
 
 IndexController.prototype.getCandidatesForPosition = function(positionId) {
+  var selectedPosition = this.positions[this.selectedPositionIndex_];
+  var positionId = selectedPosition.id;
   var locationRankValue = this.rankOptions.location.scale[this.rankValues.location - 1];
   var englishLevelValue = this.rankOptions.englishLevel.scale[this.rankValues.englishLevel - 1];
   var workloadValue = this.rankOptions.workLoad.scale[this.rankValues.workLoad - 1];
   var startDate = new Date(2014, 5, 10);
   var endDate = new Date(2015, 0, 1);
+  var primarySkill = selectedPosition.primarySkill;
 
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {
+  this.positionservice_.getCandidatesForPosition(positionId, {
     location: locationRankValue,
+    primarySkill: primarySkill,
     english: englishLevelValue,
     workload: workloadValue,
     startDate: startDate,
