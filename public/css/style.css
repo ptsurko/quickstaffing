@@ -5,20 +5,22 @@
 
 #candidates-container {
   height: 102px;
-  margin-top: -15px;
+  margin-top: -5px;
   padding-left: 100px;
 }
 
 .position-item {
   border: solid 1px;
-  display: inline-block;
+  float: left;
   height: 100px;
   width: 100px;
+  text-align: left;
 }
 
 .candidate-item {
   border: solid 1px;
-  display: inline-block;
+  float: left;
+  font-size: 14px;
   height: 100px;
   width: 100px;
 }
@@ -26,5 +28,5 @@
 #canvas-container {
   border: solid 0px;
   margin-left: 100px;
-  width: 1012px;
+  width: 1020px;
 }
