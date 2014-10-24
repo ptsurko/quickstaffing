@@ -12,6 +12,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.positions = [];
   this.candidates = [];
   this.selectedPositionIndex_ = -1;
+  this.selectedCandidates_ = [];
 
   this.projectName = '';
   this.rankOptions = {
@@ -76,31 +77,12 @@ var IndexController = function($scope, positionservice, candidateservice) {
 
   this.loadCandidates_();
   this.loadPositions_();
-
-  // this.positionservice_.getPosition("64de8762-6634-4176-891e-8a69cdae3a50")
-  //   .then(function(data) {
-  //     debugger
-  //   });
-  //
-  // this.candidateservice_.getCandidate("14bcc033-d105-440b-b16e-9c4867878632")
-  //   .then(function(data) {
-  //     debugger
-  //   });
-
-  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50", {location: 'country', english:'B2', workload: 0.4, startDate: new Date(2014, 5, 10), endDate: new Date(2015, 0, 1)})
-    .then(function(data) {
-      console.log(data);
-    });
-  //
-  // this.candidateservice_.getPositionsForCandidate("14bcc033-d105-440b-b16e-9c4867878632", {primarySkill: 10})
-  //   .then(function(data) {
-  //     debugger
-  //   });
 };
 
 IndexController.prototype.loadCandidates_ = function() {
   this.candidateservice_.getCandidates().then(function(response) {
     this.candidates = response;
+    this.selectedCandidates_ = [];
   }.bind(this));
 };
 
@@ -121,10 +103,6 @@ IndexController.prototype.matchCandidates = function(position, $event, $index) {
   this.getCandidatesForPosition(position.id);
 };
 
-IndexController.prototype.selectCandidate = function($index) {
-  this.selectedCandidate_ = $index;
-};
-
 IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
   var y1 = 0;
   var y2 = 200;
@@ -139,6 +117,8 @@ IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
     lineCap: 'round',
     tension: 0.5
   });
+
+  blueSpline.on('mouse');
 
   this.layer_.add(blueSpline);
   this.stage_.add(this.layer_);
@@ -174,6 +154,7 @@ IndexController.prototype.displayCandidatesForPositions_ = function(response) {
 
   if (candidates.length > 0) {
     this.candidates = candidates;
+    this.selectedCandidates_ = [];
   } else {
     console.log('nothing to update');
     this.layer_.clear();
@@ -197,9 +178,24 @@ IndexController.prototype.changeProjectName = function() {
   this.loadPositions_();
 };
 
-
 IndexController.prototype.onFilterChange = function() {
   if (this.selectedPositionIndex_ > 0) {
     this.getCandidatesForPosition(this.selectedPositionIndex_);
   }
+};
+
+IndexController.prototype.selectCandidate = function(candidate) {
+  var index = this.selectedCandidates_.indexOf(candidate.id);
+
+  if (index >= 0) {
+    this.selectedCandidates_.splice(index, 1);
+  } else {
+    if (this.selectedCandidates_.length < 2) {
+      this.selectedCandidates_.push(candidate.id);
+    }
+  }
+};
+
+IndexController.prototype.isCandidateSelected = function(candidate) {
+  return this.selectedCandidates_.indexOf(candidate.id) >= 0;
 };
