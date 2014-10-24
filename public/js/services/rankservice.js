@@ -3,50 +3,72 @@ var RankService = function() {
 };
 
 var locationRanks = [
-  {location: 'city', match: function(entity1, entity2) { return entity1.city == entity2.city}, rank: 3},
-  {location: 'country', match: function(entity1, entity2) { return entity1.country == entity2.country}, rank: 2},
-  {location: 'region', match: function(entity1, entity2) { return entity1.region == entity2.region}, rank: 2},
-  {location: 'ww', match: function(entity1, entity2) { return true}, rank: 0}
+  {location: 'city', match: function(entity1, entity2) { return entity1.city == entity2.city}},
+  {location: 'country', match: function(entity1, entity2) { return entity1.country == entity2.country}},
+  {location: 'region', match: function(entity1, entity2) { return entity1.region == entity2.region}},
+  {location: 'ww', match: function(entity1, entity2) { return true}}
 ];
 
+var locationRankMap = {
+  city: 3,
+  country: 2,
+  region: 1,
+  ww: 0
+};
+
+var englishRankMap = {
+  A1: 0,
+  A2: 1,
+  B1: 2,
+  B2: 3,
+  C1: 4,
+  C2: 5
+};
+
 RankService.prototype.rankCandidatesToPosition = function(position, candidates, criteriaRank) {
-   var keys = _.keys(criteriaRank);
-   var rankedCandidates = candidates.map(function(candidate) {
-     var rank = 0;
-     var rankInfo = {};
-     _.forEach(keys, function(key) {
-        if (key == "location") {
-          for(var i = 0; i < locationRanks.length; i++) {
-            var locationRank = locationRanks[i].match(position, candidate) ? locationRanks[i].rank : 0;
-            if (locationRank || criteriaRank.location == locationRanks[i].location) {
-              rank += locationRank;
-              break;
-            }
+  var keys = _.keys(criteriaRank);
+  //TODO: need to add filtering
+  var rankedCandidates = [];
+  _.forEach(candidates, function(candidate) {
+    var rank = 0;
+    var rankInfo = {};
+    _.forEach(keys, function(key) {
+      if (key == "location") {
+        for(var i = 0; i < locationRanks.length; i++) {
+          if (locationRanks[i].match(position, candidate)) {
+            rank += 1 + locationRankMap[locationRanks[i].location] / locationRankMap.city;
+            break;
           }
-        } else if (position[key] && candidate[key]) {
-          if (position[key] == candidate[key]) {
-            rank += criteriaRank[key];
-            rankInfo[key] = criteriaRank[key];
-          }
+          //if (locationRankMap[locationRanks[i].location] == )
         }
-     });
-     return {
-       rank: rank,
-       rankInfo: rankInfo,
-       candidate: candidate,
-       position: position
-     };
-   });
+      } else if (key == "english") {
+
+      } else if (position[key] && candidate[key]) {
+        if (position[key] == candidate[key]) {
+          rank += criteriaRank[key];
+          rankInfo[key] = criteriaRank[key];
+        }
+      }
+    });
+    if (rank > keys.length) {
+      rankedCandidates.push({
+        rank: rank,
+        rankInfo: rankInfo,
+        candidate: candidate,
+        position: position
+      });
+    }
+  });
 
    var result = _.sortBy(rankedCandidates, function(item) {
      return item.rank;
    });
    result.reverse();
-   if (result && result.length && result[0].rank > 0) {
-     result = _.filter(result, function(item) {
-       return item.rank > 0;
-     });
-   }
+  //  if (result && result.length && result[0].rank > 0) {
+  //    result = _.filter(result, function(item) {
+  //      return item.rank > 0;
+  //    });
+  //  }
    return result;
 };
 
