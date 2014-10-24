@@ -11,6 +11,7 @@ var IndexController = function($scope, positionservice, candidateservice) {
 
   this.positions = [];
   this.candidates = [];
+  this.selectedCandidates = [];
   this.selectedCandidate_ = 3;
   this.selectedPositionIndex_ = 2;
 
@@ -97,6 +98,10 @@ var IndexController = function($scope, positionservice, candidateservice) {
   //   .then(function(data) {
   //     debugger
   //   });
+
+  $scope.$watch('ctrl.selectedCandidates', function(newValues, oldValues) {
+    console.log('candidates changed');
+  }, true);
 };
 
 IndexController.prototype.loadCandidates_ = function() {
@@ -132,6 +137,14 @@ IndexController.prototype.matchCandidates = function(position, $event, $index) {
 
 IndexController.prototype.selectCandidate = function($index) {
   this.selectedCandidate_ = $index;
+
+  if (this.selectedCandidates.indexOf(this.candidates[$index]) < 0) {
+    this.selectedCandidates.push(this.candidates[$index]);
+  } else {
+    var candidateIndex = this.selectedCandidates.indexOf(this.candidates[$index]);
+    this.selectedCandidates.splice(candidateIndex, 1);
+  }
+  console.log('candidates selected : ' + this.selectedCandidates.length);
 };
 
 IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
