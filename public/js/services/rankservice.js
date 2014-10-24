@@ -47,6 +47,8 @@ RankService.prototype.rankCandidatesToPosition = function(position, candidates, 
         if (candidate.english > criteriaRank.english) {
           rank += 1 + englishRankMap[candidate.english] / (englishRankMap.C2 * 2);
         }
+      } else if (key == "workload") {
+        rank += candidate.workload > criteriaRank.workload ? 1 : 0;
       } else if (position[key] && candidate[key]) {
         if (position[key] == candidate[key]) {
           rank += criteriaRank[key];
