@@ -10,15 +10,32 @@ var IndexController = function(e3sservice) {
 
   this.positions = [];
   this.candidates = [];
+  this.selectedCandidate_ = 8;
 
   this.loadCandidates_();
   this.loadPositions_();
 };
 
+IndexController.prototype.loadCandidates_ = function() {
+  this.e3sservice_.getCandidates().then(this.onCandidatesLoaded_.bind(this));
+};
+
+IndexController.prototype.loadPositions_ = function() {
+  this.e3sservice_.getPosition().then(this.onPositionsLoaded_.bind(this));
+};
+
+IndexController.prototype.onCandidatesLoaded_ = function(response) {
+  this.candidates = response;
+};
+
+IndexController.prototype.onPositionsLoaded_ = function(response) {
+  this.positions = response;
+};
+
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
   var elementWidth = $event.srcElement.clientWidth;
   var x1 = ($index * (elementWidth + 2) + elementWidth / 2);
-  var x2 = (driveToIndex * (elementWidth + 2) + elementWidth / 2);
+  var x2 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
 
 // Do not remove it!!!
 // var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
@@ -28,12 +45,8 @@ IndexController.prototype.matchCandidates = function(position, $event, $index) {
 };
 
 IndexController.prototype.selectCandidate = function($index) {
-  driveToIndex = $index;
+  this.selectedCandidate_ = $index;
 };
-
-var driveToIndex = 8;
-
-
 
 IndexController.prototype.drawLine_ = function(x1, x2) {
   var y1 = 0;
@@ -66,20 +79,4 @@ IndexController.prototype.calcX_ = function(a, b, y) {
     return y;
   }
   return (y - b) / a;
-};
-
-IndexController.prototype.loadCandidates_ = function() {
-  this.e3sservice_.getCandidates().then(this.onCandidatesLoaded_.bind(this));
-};
-
-IndexController.prototype.loadPositions_ = function() {
-  this.e3sservice_.getPosition().then(this.onPositionsLoaded_.bind(this));
-};
-
-IndexController.prototype.onCandidatesLoaded_ = function(response) {
-  this.candidates = response;
-};
-
-IndexController.prototype.onPositionsLoaded_ = function(response) {
-  this.positions = response;
 };
