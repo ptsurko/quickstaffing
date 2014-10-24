@@ -16,41 +16,42 @@
 <body ng-app="QuickStaffing" ng-controller="IndexController as ctrl">
   <h1>Quick Staffing tool</h1>
 
-  <style>
-    .jslider {
-      display: inline-block;
-      width: 60%;
-    }
-  </style>
   <div>
     <div id="filter">
       <form>
         <div class="filter-item">
           <span class="label">Location</span>
-          <input ng-model="value" type="text" id="mySlider1" slider options="options" />
+          <input id="locationSlider" type="text"
+              ng-model="ctrl.rankValues.location" slider options="ctrl.rankOptions.location" />
         </div>
         <div class="filter-item">
           <span class="label">Primary skill</span>
+          <input type="text" id="primarySkillSlider"
+              ng-model="ctrl.rankValues.primarySkill" slider options="ctrl.rankOptions.primarySkill" />
         </div>
         <div class="filter-item">
           <span class="label">Start date</span>
-          <input ng-model="value" type="text" id="mySlider2" slider options="options" />
+          <input type="text" id="startDateSlider"
+              ng-model="ctrl.rankValues.startDate" slider options="ctrl.rankOptions.startDate" />
         </div>
         <div class="filter-item">
           <span class="label">Work load</span>
-          <input ng-model="value" type="text" id="mySlider3" slider options="options" />
+          <input type="text" id="workLoadSlider"
+              ng-model="ctrl.rankValues.workLoad" slider options="ctrl.rankOptions.workLoad" />
         </div>
         <div class="filter-item">
           <span class="label">Seniority</span>
-          <input ng-model="value" type="text" id="mySlider4" slider options="options" />
+          <input type="text" id="senioritySlider"
+              ng-model="ctrl.rankValues.seniority" slider options="ctrl.rankOptions.seniority" />
         </div>
         <div class="filter-item">
           <span class="label">English level</span>
-          <input ng-model="value" type="text" id="mySlider5" slider options="options" />
+          <input type="text" id="englishLevelSlider"
+              ng-model="ctrl.rankValues.englishLevel" slider options="ctrl.rankOptions.englishLevel" />
         </div>
-
       </form>
     </div>
+
     <div id="wiring">
       <div id="positions-container">
         <div class="position-item" ng-repeat="position in ctrl.positions"
@@ -60,12 +61,11 @@
       </div>
 
       <div id="canvas-container"></div>
-
       <div id="candidates-container">
 
       <div class="candidate-item" ng-repeat="candidate in ctrl.candidates"
           ng-click="ctrl.selectCandidate($index)">
-        <img style="width: 100px; height: 100px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
+        <img style="width: 100px; height: 120px;" ng-src="/api/candidates/photo/{{ candidate.photoId }}" />
         {{ candidate.fullName }}</div>
       </div>
     </div>

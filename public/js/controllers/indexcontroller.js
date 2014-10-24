@@ -2,14 +2,6 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.positionservice_ = positionservice;
   this.candidateservice_ = candidateservice;
 
-  $scope.value = "50";
-  $scope.options = {
-    from: 1,
-    to: 50,
-    step: 1,
-    dimension: " km"
-  };
-
   this.stage_ = new Kinetic.Stage({
     container: 'canvas-container',
     width: 1020,
@@ -20,6 +12,67 @@ var IndexController = function($scope, positionservice, candidateservice) {
   this.positions = [];
   this.candidates = [];
   this.selectedCandidate_ = 3;
+  this.selectedPositionIndex_ = 2;
+
+  this.rankOptions = {
+    location: {
+      from: 1,
+      to: 4,
+      step: 1,
+      smooth: false,
+      dimension: " km",
+      scale: ['city', 'region', 'country', 'world wide']
+    },
+    primarySkill: {
+      from: 0,
+      to: 100,
+      step: 10,
+      smooth: false,
+      dimension: " %",
+      scale: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    },
+    startDate: {
+      from: 1,
+      to: 12,
+      step: 1,
+      smooth: false,
+      dimension: " month",
+      scale: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    },
+    workLoad: {
+      from: 1,
+      to: 4,
+      step: 1,
+      smooth: false,
+      dimension: " km",
+      scale: ['city', 'region', 'country', 'ww']
+    },
+    seniority: {
+      from: 1,
+      to: 4,
+      step: 1,
+      smooth: false,
+      dimension: " km",
+      scale: ['city', 'region', 'country', 'world wide']
+    },
+    englishLevel: {
+      from: 1,
+      to: 6,
+      step: 1,
+      smooth: false,
+      dimension: " km",
+      scale: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+    }
+  };
+
+  this.rankValues = {
+    location: 1,
+    primarySkill: 30,
+    startDate: 3,
+    workLoad: 4,
+    seniority: 2,
+    englishLevel: 4
+  };
 
   this.loadCandidates_();
   this.loadPositions_();
@@ -64,14 +117,13 @@ IndexController.prototype.onPositionsLoaded_ = function(response) {
 };
 
 IndexController.prototype.matchCandidates = function(position, $event, $index) {
+  this.selectedPositionIndex_ = $index;
+
   var elementWidth = $event.currentTarget.clientWidth;
   var x2 = ($index * (elementWidth + 2) + elementWidth / 2);
   var x1 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
 
-
-// Do not remove it!!!
-// var x1 = ($index * (elementWidth + 2) + elementWidth / 2);
-// var x2 = (this.selectedCandidate_ * (elementWidth + 2) + elementWidth / 2);
+  this.getCandidatesForPosition(position.id);
   this.drawLine_(x1, x2);
 };
 
@@ -79,7 +131,7 @@ IndexController.prototype.selectCandidate = function($index) {
   this.selectedCandidate_ = $index;
 };
 
-IndexController.prototype.drawLine_ = function(x1, x2) {
+IndexController.prototype.drawLine_ = function(x1, x2, thikness) {
   var y1 = 0;
   var y2 = 300;
   var a = (y2 - y1) / (x2 - x1);
@@ -110,4 +162,11 @@ IndexController.prototype.calcX_ = function(a, b, y) {
     return y;
   }
   return (y - b) / a;
+};
+
+IndexController.prototype.getCandidatesForPosition = function(positionId) {
+  var locationRankValue = this.rankOptions.location.scale[this.rankValues.location - 1];
+  console.log(locationRankValue);
+  this.positionservice_.getCandidatesForPosition("64de8762-6634-4176-891e-8a69cdae3a50",
+      {location: locationRankValue}).then(this.onCandidatesLoaded_.bind(this));
 };
