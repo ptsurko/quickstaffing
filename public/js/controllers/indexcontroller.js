@@ -203,3 +203,7 @@ IndexController.prototype.selectCandidate = function(candidate) {
 IndexController.prototype.isCandidateSelected = function(candidate) {
   return this.selectedCandidates.indexOf(candidate) >= 0;
 };
+
+IndexController.prototype.getSelectedPosition = function() {
+  return this.positions[this.selectedPositionIndex_];
+};

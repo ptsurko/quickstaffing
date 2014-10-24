@@ -56,7 +56,20 @@
       </form>
     </div>
     <input class="form-control" type="text" placeholder="Project name"
-        ng-model="ctrl.projectName" ng-change="ctrl.changeProjectName()" />
+        ng-model="ctrl.projectName" style="width: 400px;" ng-change="ctrl.changeProjectName()" />
+
+    <div class="position-description">
+      <div class="description-sub">
+        <div><b>Project:</b><span class="value">{{ ctrl.getSelectedPosition().projectName }}</span></div>
+        <div><b>Customer:</b><span class="value">{{ ctrl.getSelectedPosition().customer }}</span></div>
+        <div><b>Position:</b><span class="value">{{ ctrl.getSelectedPosition().position }}</span></div>
+      </div>
+      <div class="description-sub">
+        <div><b>Primary Skill:</b><span>{{ ctrl.getSelectedPosition().primarySkill }}</span></div>
+        <div><b>Country:</b><span>{{ ctrl.getSelectedPosition().country}}</span></div>
+        <div><b>City:</b><span>{{ ctrl.getSelectedPosition().city }}</span></div>
+      </div>
+    </div>
     <div id="wiring">
       <div id="positions-container">
         <div class="position-item" ng-class="{selected: ctrl.selectedPositionIndex_ == $index}"
